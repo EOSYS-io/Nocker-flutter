@@ -5,7 +5,7 @@ import 'package:eos_node_checker/model/EosNode.dart';
 import 'package:eos_node_checker/presenter/MainPresenter.dart';
 import 'package:flutter/material.dart';
 
-final double PADDING = 8.0;
+final double detailWidgetPadding = 8.0;
 
 class DetailWidget extends StatefulWidget {
   final String title;
@@ -62,7 +62,7 @@ class DetailState extends State<DetailWidget> {
 
   Widget buildDetail() {
     return Container(
-        padding: EdgeInsets.all(PADDING * 2),
+        padding: EdgeInsets.all(detailWidgetPadding * 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class DetailState extends State<DetailWidget> {
 
   Widget buildRow(String text, {bool isBold = false}) {
     return Container(
-      padding: EdgeInsets.only(top: PADDING, bottom: PADDING),
+      padding: EdgeInsets.only(top: detailWidgetPadding, bottom: detailWidgetPadding),
       child: buildRowText(text, isBold: isBold)
     );
   }

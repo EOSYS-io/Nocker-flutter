@@ -6,6 +6,7 @@ class EosNode {
   final String title;
   String url;
   final int rank;
+  String endpoint;
   String version;
   int number = 0;
   int lastNumber = 0;

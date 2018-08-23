@@ -4,7 +4,7 @@ import 'package:eos_node_checker/ui/DetailWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-final double PADDING = 8.0;
+final double mainWidgetPadding = 8.0;
 
 class MainWidget extends StatefulWidget {
   @override
@@ -62,7 +62,7 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: PADDING, bottom: PADDING),
+          padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
           child: buildListRow('R', 'Title', 'Number', 'Time', isBold: true),
         ),
         Expanded(
@@ -99,7 +99,7 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
   Widget buildListRow(final rank, final title, final number, final time, {Color color = Colors.white, bool isBold = false}) {
     return Container(
       color: color,
-      padding: EdgeInsets.only(top: PADDING, bottom: PADDING),
+      padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
