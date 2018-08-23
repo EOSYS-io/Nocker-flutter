@@ -14,7 +14,7 @@ class MainPresenter {
   final service = HttpService();
   final db = ProducerProvider();
 
-  final _nodes = <EosNode>[];
+  final nodes = <EosNode>[];
   int maxHeight = 0;
 
   final subject = BehaviorSubject<List<EosNode>>();
@@ -23,16 +23,16 @@ class MainPresenter {
   void init() {
     db.open();
 
-    if (_nodes.isEmpty) {
+    if (nodes.isEmpty) {
       getProducers();
     } else {
-      subject.add(_nodes);
+      subject.add(nodes);
     }
 
     setTimer();
   }
 
-  List<EosNode> getNodes() => _nodes;
+  List<EosNode> getNodes() => nodes;
 
   int getMaxHeight() => maxHeight;
 
@@ -52,13 +52,18 @@ class MainPresenter {
   }
 
   void fetchNodes() {
-    for (EosNode node in _nodes) {
+    for (EosNode node in nodes) {
       fetchNode(node);
     }
   }
 
   void fetchNode(EosNode node) {
-    service.getInfo(node.endpoint)
+    String endpoint = node.endpoint;
+    if (endpoint == null || endpoint.isEmpty) {
+      return;
+    }
+
+    service.getInfo(endpoint)
         .then((response) => response.body)
         .then((body) {
           node.fromJson(json.decode(body));
@@ -66,12 +71,12 @@ class MainPresenter {
           if (node.number > maxHeight) {
             maxHeight = node.number;
           }
-          subject.add(_nodes);
+          subject.add(nodes);
         })
         .catchError((error) {
           print(error.toString());
           node.setError();
-          subject.add(_nodes);
+          subject.add(nodes);
         });
   }
 
@@ -91,10 +96,13 @@ class MainPresenter {
             node.endpoint = await db.getEndpoint(node.title);
             if (node.endpoint == null) {
               getBPInfo(node);
-            } else {
-              addToList(node);
             }
+
+            nodes.add(node);
           }
+
+          nodes.sort((a, b) => a.rank.compareTo(b.rank));
+          subject.add(nodes);
         }).catchError((error) { print(error); });
   }
 
@@ -124,14 +132,12 @@ class MainPresenter {
 
             db.insert(node);
 
-            addToList(node);
+            subject.add(nodes);
           }
-        }).catchError((error) { print(error); });
-  }
-
-  void addToList(EosNode node) {
-    _nodes.add(node);
-    _nodes.sort((a, b) => a.rank.compareTo(b.rank));
-    subject.add(_nodes);
+        }).catchError((error) {
+          print(error);
+          node.setError();
+          subject.add(nodes);
+        });
   }
 }
