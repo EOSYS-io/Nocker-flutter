@@ -78,28 +78,29 @@ class MainPresenter {
 
   void getProducers() {
     service.getProducers()
-        .then((response) => response.body)
-        .then((body) async {
-          Map map = json.decode(body);
-          List rows = map['rows'];
-          for (int i = 0; i < rows.length; i++) {
-            Map map = rows[i];
-            final node = EosNode(
-                title: map['owner'],
-                url: map['url'],
-                rank: i + 1
-            );
+        .then((response) => json.decode(response.body))
+        .then((body) {
+            List rows = body['rows'];
+            return rows.map((row) => EosNode(
+                title: row['owner'],
+                url: row['url'],
+                rank: rows.indexOf(row) + 1
+            ));
+        })
+        .then((rows) {
+          nodes.addAll(rows);
+          nodes.sort((a, b) => a.rank.compareTo(b.rank));
+
+          nodes.forEach((node) async {
             node.endpoint = await db.getEndpoint(node.title);
             if (node.endpoint == null) {
               getBPInfo(node);
             }
+          });
 
-            nodes.add(node);
-          }
-
-          nodes.sort((a, b) => a.rank.compareTo(b.rank));
           subject.add(nodes);
-        }).catchError((error) { print(error); });
+        })
+        .catchError((error) { print(error); });
   }
 
   void getBPInfo(EosNode node) {
@@ -130,10 +131,6 @@ class MainPresenter {
 
             subject.add(nodes);
           }
-        }).catchError((error) {
-          print(error);
-          node.setError();
-          subject.add(nodes);
-        });
+        }).catchError((error) { print(error); });
   }
 }
