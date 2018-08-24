@@ -19,6 +19,7 @@ class MainPresenter {
 
   final subject = BehaviorSubject<List<EosNode>>();
   Timer timer;
+  int nodeIndex = 0;
 
   void init() {
     db.open();
@@ -32,15 +33,16 @@ class MainPresenter {
     setTimer();
   }
 
-  List<EosNode> getNodes() => nodes;
-
-  int getMaxHeight() => maxHeight;
-
-  BehaviorSubject<List<EosNode>> getSubject() => subject;
-
   void setTimer() {
-    timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-      fetchNodes();
+    timer = Timer.periodic(Duration(milliseconds: 50), (Timer t) {
+      if (nodes.isEmpty) {
+        return;
+      }
+
+      if (nodeIndex >= nodes.length) {
+        nodeIndex %= nodes.length;
+      }
+      fetchNode(nodes[nodeIndex++]);
     });
   }
 
@@ -48,12 +50,6 @@ class MainPresenter {
     if (timer != null) {
       timer.cancel();
       timer = null;
-    }
-  }
-
-  void fetchNodes() {
-    for (EosNode node in nodes) {
-      fetchNode(node);
     }
   }
 
