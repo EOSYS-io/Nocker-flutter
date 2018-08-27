@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-final int TIMEOUT_INTERVAL = 3;
+final int timeoutInterval = 3;
 
 class HttpService {
   static final HttpService _singleton = HttpService._internal();
@@ -11,7 +11,7 @@ class HttpService {
   HttpService._internal();
 
   Future<Response> getInfo(String url) => post("$url/v1/chain/get_info")
-      .timeout(Duration(seconds: TIMEOUT_INTERVAL));
+      .timeout(Duration(seconds: timeoutInterval));
 
   Future<Response> getProducers() => post(
       "https://rpc.eosys.io:443/v1/chain/get_producers",
