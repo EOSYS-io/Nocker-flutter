@@ -23,37 +23,31 @@ class MainPresenter extends WidgetsBindingObserver {
 
   void init() {
     isInit = true;
-    db.open();
     WidgetsBinding.instance.addObserver(this);
 
-    if (nodes.isEmpty) {
-      getProducers();
-    } else {
-      subject.add(nodes);
-    }
-
-    setTimer();
+    onResume();
   }
 
   void dispose() {
     isInit = false;
-    db.close();
     WidgetsBinding.instance.removeObserver(this);
+
+    onPause();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch(state) {
       case AppLifecycleState.resumed:
-        setTimer();
+        onResume();
         break;
       case AppLifecycleState.paused:
-        cancelTimer();
+        onPause();
         break;
     }
   }
 
-  void setTimer() {
+  void onResume() async {
     timer = Timer.periodic(Duration(milliseconds: 50), (t) {
       if (nodes.isEmpty) {
         return;
@@ -68,9 +62,14 @@ class MainPresenter extends WidgetsBindingObserver {
     refreshTimer = Timer.periodic(Duration(milliseconds: 500), (t) {
       subject.add(nodes);
     });
+
+    if (nodes.isEmpty) {
+      await db.open();
+      getProducers();
+    }
   }
 
-  void cancelTimer() {
+  void onPause() async {
     if (timer != null) {
       timer.cancel();
       timer = null;
@@ -80,6 +79,8 @@ class MainPresenter extends WidgetsBindingObserver {
       refreshTimer.cancel();
       refreshTimer = null;
     }
+
+    await db.close();
   }
 
   void fetchNode(EosNode node) {
