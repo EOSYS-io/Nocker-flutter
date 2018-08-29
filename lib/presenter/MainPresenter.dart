@@ -20,9 +20,11 @@ class MainPresenter {
   final subject = BehaviorSubject<List<EosNode>>();
   Timer timer;
   Timer refreshTimer;
+  bool isInit = false;
   int nodeIndex = 0;
 
   void init() {
+    isInit = true;
     db.open();
 
     if (nodes.isEmpty) {
@@ -32,6 +34,10 @@ class MainPresenter {
     }
 
     setTimer();
+  }
+
+  void dispose() {
+    isInit = false;
   }
 
   void setTimer() {
@@ -108,7 +114,12 @@ class MainPresenter {
 
           subject.add(nodes);
         })
-        .catchError((error) { print(error); });
+        .catchError((error) {
+          print(error);
+          if (isInit) {
+            getProducers();
+          }
+        });
   }
 
   void getBPInfo(EosNode node) {
@@ -139,6 +150,11 @@ class MainPresenter {
 
             fetchNode(node);
           }
-        }).catchError((error) { print(error); });
+        }).catchError((error) {
+          print(error);
+          if (isInit) {
+            getBPInfo(node);
+          }
+        });
   }
 }

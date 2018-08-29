@@ -31,6 +31,7 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    presenter.dispose();
   }
 
   @override
