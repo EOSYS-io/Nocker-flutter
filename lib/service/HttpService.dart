@@ -6,10 +6,6 @@ import 'package:http/http.dart';
 final int timeoutInterval = 3;
 
 class HttpService {
-  static final HttpService _singleton = HttpService._internal();
-  factory HttpService() => _singleton;
-  HttpService._internal();
-
   Future<Response> getInfo(String url) => post("$url/v1/chain/get_info")
       .timeout(Duration(seconds: timeoutInterval));
 

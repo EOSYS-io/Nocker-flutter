@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:eos_node_checker/db/ProducerProvider.dart';
 import 'package:eos_node_checker/model/EosNode.dart';
 import 'package:eos_node_checker/service/HttpService.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MainPresenter {
-  static final MainPresenter _singleton = MainPresenter._internal();
-  factory MainPresenter() => _singleton;
-  MainPresenter._internal();
-
+class MainPresenter extends WidgetsBindingObserver {
   final service = HttpService();
   final db = ProducerProvider();
 
@@ -26,6 +24,7 @@ class MainPresenter {
   void init() {
     isInit = true;
     db.open();
+    WidgetsBinding.instance.addObserver(this);
 
     if (nodes.isEmpty) {
       getProducers();
@@ -38,6 +37,20 @@ class MainPresenter {
 
   void dispose() {
     isInit = false;
+    db.close();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch(state) {
+      case AppLifecycleState.resumed:
+        setTimer();
+        break;
+      case AppLifecycleState.paused:
+        cancelTimer();
+        break;
+    }
   }
 
   void setTimer() {

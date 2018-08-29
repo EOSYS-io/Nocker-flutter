@@ -8,16 +8,17 @@ import 'package:intl/intl.dart';
 final double detailWidgetPadding = 8.0;
 
 class DetailWidget extends StatefulWidget {
+  final MainPresenter presenter;
   final String title;
 
-  DetailWidget(this.title);
+  DetailWidget(this.presenter, this.title);
 
   @override
-  DetailState createState() => DetailState(title);
+  DetailState createState() => DetailState(presenter, title);
 }
 
 class DetailState extends State<DetailWidget> {
-  MainPresenter presenter = MainPresenter();
+  final MainPresenter presenter;
   final String title;
 
   StreamSubscription<List<EosNode>> subscription;
@@ -25,12 +26,11 @@ class DetailState extends State<DetailWidget> {
   EosNode node;
   int number;
 
-  DetailState(this.title);
+  DetailState(this.presenter, this.title);
 
   @override
   void initState() {
     super.initState();
-    print('initState');
     subscription = presenter.subject.stream.listen((list) {
       EosNode node = list.firstWhere((one) => one.title == this.title );
       if (number != node.number) {

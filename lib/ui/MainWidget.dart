@@ -11,14 +11,13 @@ class MainWidget extends StatefulWidget {
   MainState createState() => MainState();
 }
 
-class MainState extends State<MainWidget> with WidgetsBindingObserver {
+class MainState extends State<MainWidget> {
   MainPresenter presenter = MainPresenter();
   List<EosNode> nodes = <EosNode>[];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     presenter.init();
     presenter.subject.stream.listen((list) {
       setState(() {
@@ -30,20 +29,7 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     presenter.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch(state) {
-      case AppLifecycleState.resumed:
-        presenter.setTimer();
-        break;
-      case AppLifecycleState.paused:
-        presenter.cancelTimer();
-        break;
-    }
   }
 
   @override
@@ -133,7 +119,7 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
   void onItemClicked(EosNode node) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => DetailWidget(node.title),
+        builder: (context) => DetailWidget(presenter, node.title),
       )
     );
   }
