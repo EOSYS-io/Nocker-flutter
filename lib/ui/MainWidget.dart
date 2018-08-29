@@ -78,8 +78,8 @@ class MainState extends State<MainWidget> with WidgetsBindingObserver {
 
   Widget buildListTile(EosNode node) {
     String time = 'none';
-    if (node != null && node.time != null && node.time.isNotEmpty) {
-      time = DateFormat('yyMMdd HH:mm:ss').format(DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(node.time));
+    if (node != null && node.time != null) {
+      time = DateFormat('yyMMdd HH:mm:ss').format(node.time);
     }
 
     Color color;

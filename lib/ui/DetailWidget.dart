@@ -1,9 +1,9 @@
-
 import 'dart:async';
 
 import 'package:eos_node_checker/model/EosNode.dart';
 import 'package:eos_node_checker/presenter/MainPresenter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final double detailWidgetPadding = 8.0;
 
@@ -71,7 +71,7 @@ class DetailState extends State<DetailWidget> {
             buildRow('Number : ${node != null ? node.number : 'none'}'),
             buildRow('Rank : ${node != null ? node.rank : '0'}'),
             buildRow('Id : ${node != null ? node.id : 'none'}'),
-            buildRow('Time : ${node != null ? node.time : 'none'}'),
+            buildRow('Time : ${node != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time) : 'none'}'),
             buildRow('Producer : ${node != null ? node.producer : 'none'}'),
           ],
         )

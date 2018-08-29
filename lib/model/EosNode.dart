@@ -1,4 +1,4 @@
-
+import 'package:intl/intl.dart';
 
 class EosNode {
   EosNode({this.title, this.url, this.rank});
@@ -11,17 +11,15 @@ class EosNode {
   int number = 0;
   int lastNumber = 0;
   String id;
-  String time;
+  DateTime time;
   String producer;
-
-
 
   void fromJson(Map<String, dynamic> json) {
     version = json['server_version'];
     number = json['head_block_num'];
     lastNumber = json['last_irreversible_block_num'];
     id = json['head_block_id'];
-    time = json['head_block_time'];
+    time = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['head_block_time']);
     producer = json['head_block_producer'];
   }
 
