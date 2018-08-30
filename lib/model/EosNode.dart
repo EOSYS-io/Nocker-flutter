@@ -1,10 +1,8 @@
 import 'package:intl/intl.dart';
 
 class EosNode {
-  EosNode({this.title, this.url, this.rank});
-
   final String title;
-  String url;
+  final String url;
   final int rank;
   String endpoint;
   String version;
@@ -13,6 +11,8 @@ class EosNode {
   String id;
   DateTime time;
   String producer;
+
+  EosNode(this.title, this.url, this.rank);
 
   void fromJson(Map<String, dynamic> json) {
     version = json['server_version'];

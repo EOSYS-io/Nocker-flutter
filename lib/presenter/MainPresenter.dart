@@ -110,9 +110,9 @@ class MainPresenter extends WidgetsBindingObserver {
         .then((body) {
             List rows = body['rows'];
             return rows.map((row) => EosNode(
-                title: row['owner'],
-                url: row['url'],
-                rank: rows.indexOf(row) + 1
+                row['owner'],
+                row['url'],
+                rows.indexOf(row) + 1
             ));
         })
         .then((rows) {

@@ -19,4 +19,15 @@ class HttpService {
 
   Future<Response> getBPInfo(String url) => get("$url/bp.json")
       .timeout(Duration(seconds: 10));
+
+  Future<Response> getActions(String name, {int lastSeq = 0, int count = 100}) {
+    return post(
+        'https://eos.greymass.com/v1/history/get_actions',
+        body: json.encode({
+          'account_name': name,
+          'pos': lastSeq - 1,
+          'offset': (lastSeq == 0 ? -count : 1 - count)
+        })
+    );
+  }
 }
