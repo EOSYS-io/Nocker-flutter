@@ -65,7 +65,7 @@ class MainState extends State<MainWidget> {
   Widget buildListTile(EosNode node) {
     String time = 'none';
     if (node != null && node.time != null) {
-      time = DateFormat('yyMMdd HH:mm:ss').format(node.time);
+      time = DateFormat('yyMMdd\nHH:mm:ss').format(node.time);
     }
 
     Color color;
@@ -79,7 +79,7 @@ class MainState extends State<MainWidget> {
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: buildListRow(node.rank, node.title, node.number, time, color: color),
+      child: buildListRow(node.rank, '${node.title}\n${node.votePercents.toStringAsFixed(3)}%', node.number, time, color: color),
     );
   }
 
@@ -100,7 +100,7 @@ class MainState extends State<MainWidget> {
             child: buildRowText('$number', isBold: isBold),
           ),
           Container(
-            width: 130.0,
+            width: 100.0,
             child: buildRowText(time, isBold: isBold),
           ),
         ],

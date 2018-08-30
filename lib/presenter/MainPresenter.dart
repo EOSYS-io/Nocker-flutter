@@ -108,12 +108,15 @@ class MainPresenter extends WidgetsBindingObserver {
     service.getProducers()
         .then((response) => json.decode(response.body))
         .then((body) {
-            List rows = body['rows'];
-            return rows.map((row) => EosNode(
-                row['owner'],
-                row['url'],
-                rows.indexOf(row) + 1
-            ));
+          double totalVotes = double.parse(body['total_producer_vote_weight']);
+          List rows = body['rows'];
+          return rows.map((row) => EosNode(
+              row['owner'],
+              row['url'],
+              rows.indexOf(row) + 1,
+              double.parse(row['total_votes']),
+              totalVotes
+          ));
         })
         .then((rows) {
           nodes.addAll(rows);
