@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eos_node_checker/model/Action.dart';
-import 'package:eos_node_checker/service/HttpService.dart';
+import 'package:eos_node_checker/data/model/Action.dart';
+import 'package:eos_node_checker/data/remote/HttpService.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DetailPresenter {

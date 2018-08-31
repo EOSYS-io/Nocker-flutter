@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eos_node_checker/model/EosNode.dart';
+import 'package:eos_node_checker/data/model/EosNode.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

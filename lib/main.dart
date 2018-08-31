@@ -1,4 +1,4 @@
-import 'package:eos_node_checker/ui/MainWidget.dart';
+import 'package:eos_node_checker/ui/widget/MainWidget.dart';
 import 'package:eos_node_checker/util/locale/DefaultLocalizationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

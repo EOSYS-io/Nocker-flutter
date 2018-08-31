@@ -1,6 +1,6 @@
-import 'package:eos_node_checker/model/EosNode.dart';
-import 'package:eos_node_checker/presenter/MainPresenter.dart';
-import 'package:eos_node_checker/ui/DetailWidget.dart';
+import 'package:eos_node_checker/data/model/EosNode.dart';
+import 'package:eos_node_checker/ui/presenter/MainPresenter.dart';
+import 'package:eos_node_checker/ui/widget/DetailWidget.dart';
 import 'package:eos_node_checker/util/locale/DefaultLocalizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
