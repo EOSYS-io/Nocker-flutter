@@ -14,7 +14,7 @@ class Action {
   Action(Map<String, dynamic> json) {
     accountSeq = json['account_action_seq'];
     blockNumber = json['block_num'];
-    blockTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['block_time']);
+    blockTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['block_time'], true);
 
     Map<String, dynamic> actionTrace = json['action_trace'];
     transactionId = actionTrace['trx_id'];
