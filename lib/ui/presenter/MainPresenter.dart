@@ -48,6 +48,8 @@ class MainPresenter extends WidgetsBindingObserver {
   }
 
   void onResume() async {
+    cancelTimer();
+    
     timer = Timer.periodic(Duration(milliseconds: 50), (t) {
       if (nodes.isEmpty) {
         return;
@@ -70,6 +72,11 @@ class MainPresenter extends WidgetsBindingObserver {
   }
 
   void onPause() async {
+    cancelTimer();
+    await db.close();
+  }
+
+  void cancelTimer() {
     if (timer != null) {
       timer.cancel();
       timer = null;
@@ -79,8 +86,6 @@ class MainPresenter extends WidgetsBindingObserver {
       refreshTimer.cancel();
       refreshTimer = null;
     }
-
-    await db.close();
   }
 
   void fetchNode(EosNode node) {
@@ -119,6 +124,7 @@ class MainPresenter extends WidgetsBindingObserver {
           ));
         })
         .then((rows) {
+          nodes.clear();
           nodes.addAll(rows);
           nodes.sort((a, b) => a.rank.compareTo(b.rank));
 
