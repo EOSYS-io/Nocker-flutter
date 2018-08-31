@@ -16,7 +16,7 @@ class DetailPresenter {
   void getActions() {
     int seq = actions.isNotEmpty ? actions.last.accountSeq : 0;
     service.getActions(title, lastSeq: seq)
-        .then((response) => json.decode(response.body))
+        .then((response) => json.decode(utf8.decode(response.bodyBytes)))
         .then((body) {
           List actions = body['actions'];
           return actions.map((act) => Action(act));
