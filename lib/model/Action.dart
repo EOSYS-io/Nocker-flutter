@@ -25,7 +25,7 @@ class Action {
     data = act['data'];
   }
 
-  String getBlockTimeString() => DateFormat('yyyy-MM-dd HH:mm:ss').format(blockTime);
+  String getBlockTimeString() => DateFormat('yyyy-MM-dd HH:mm:ss').format(blockTime.toLocal());
 
   String getDataString() => json.encode(data);
 

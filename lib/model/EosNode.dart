@@ -23,7 +23,7 @@ class EosNode {
     number = json['head_block_num'];
     lastNumber = json['last_irreversible_block_num'];
     id = json['head_block_id'];
-    time = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['head_block_time']);
+    time = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['head_block_time'], true);
     producer = json['head_block_producer'];
   }
 

@@ -1,6 +1,7 @@
 import 'package:eos_node_checker/model/EosNode.dart';
 import 'package:eos_node_checker/presenter/MainPresenter.dart';
 import 'package:eos_node_checker/ui/DetailWidget.dart';
+import 'package:eos_node_checker/util/locale/DefaultLocalizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +14,7 @@ class MainWidget extends StatefulWidget {
 
 class MainState extends State<MainWidget> {
   MainPresenter presenter = MainPresenter();
+  DefaultLocalizations localizations;
   List<EosNode> nodes = <EosNode>[];
 
   @override
@@ -34,11 +36,15 @@ class MainState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (localizations == null) {
+      localizations = DefaultLocalizations.of(context);
+    }
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text('EOS Node Monitor'),
+        title: Text(localizations.appTitle),
       ),
       body: buildNodes(),
     );
@@ -65,7 +71,7 @@ class MainState extends State<MainWidget> {
   Widget buildListTile(EosNode node) {
     String time = 'none';
     if (node != null && node.time != null) {
-      time = DateFormat('yyMMdd\nHH:mm:ss').format(node.time);
+      time = DateFormat('yyMMdd\nHH:mm:ss').format(node.time.toLocal());
     }
 
     Color color;

@@ -88,7 +88,7 @@ class DetailState extends State<DetailWidget> {
           children: <Widget>[
             buildRow('Number : ${node != null ? node.number : 'none'}'),
             buildRow('Id : ${node != null ? node.id : 'none'}'),
-            buildRow('Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time) : 'none'}'),
+            buildRow('Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time.toLocal()) : 'none'}'),
             buildRow('Producer : ${node != null ? node.producer : 'none'}'),
             Expanded(child: buildListView()),
           ],
