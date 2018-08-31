@@ -1,4 +1,5 @@
 import 'package:eos_node_checker/data/model/EosNode.dart';
+import 'package:eos_node_checker/ui/CommonWidget.dart';
 import 'package:eos_node_checker/ui/presenter/MainPresenter.dart';
 import 'package:eos_node_checker/ui/widget/DetailWidget.dart';
 import 'package:eos_node_checker/util/locale/DefaultLocalizations.dart';
@@ -46,11 +47,11 @@ class MainState extends State<MainWidget> {
         // the App.build method, and use it to set our appbar title.
         title: Text(localizations.appTitle),
       ),
-      body: buildNodes(),
+      body: buildMain(),
     );
   }
 
-  Widget buildNodes() {
+  Widget buildMain() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -60,8 +61,13 @@ class MainState extends State<MainWidget> {
         ),
         Expanded(
             child: ListView.builder(
-                itemCount: nodes.length,
-                itemBuilder: (context, i) => buildListTile(nodes[i]),
+                itemCount: nodes.length * 2,
+                itemBuilder: (context, i) {
+                  if (i.isOdd) return CommonWidget.getDivider();
+
+                  int index = i ~/ 2;
+                  return buildListTile(nodes[index]);
+                },
             )
         )
       ],
@@ -96,29 +102,24 @@ class MainState extends State<MainWidget> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            width: 30.0,
-            child: buildRowText('$rank', isBold: isBold),
+          CommonWidget.getTextContainer(
+              rank.toString(),
+              width: 30.0,
+              isBold: isBold
           ),
-          Expanded(child: buildRowText(title, isBold: isBold)),
-          Container(
-            width: 110.0,
-            child: buildRowText('$number', isBold: isBold),
+          Expanded(child: CommonWidget.getText(title, isBold: isBold)),
+          CommonWidget.getTextContainer(
+              number.toString(),
+              width: 110.0,
+              isBold: isBold
           ),
-          Container(
-            width: 100.0,
-            child: buildRowText(time, isBold: isBold),
+          CommonWidget.getTextContainer(
+              time,
+              width: 100.0,
+              isBold: isBold
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildRowText(String text, {bool isBold = false}) {
-    return Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 14.0, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
     );
   }
 

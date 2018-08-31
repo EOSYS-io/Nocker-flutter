@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eos_node_checker/data/model/Action.dart';
 import 'package:eos_node_checker/data/model/EosNode.dart';
+import 'package:eos_node_checker/ui/CommonWidget.dart';
 import 'package:eos_node_checker/ui/presenter/DetailPresenter.dart';
 import 'package:eos_node_checker/ui/presenter/MainPresenter.dart';
 import 'package:flutter/material.dart';
@@ -79,35 +80,34 @@ class DetailState extends State<DetailWidget> {
   }
 
   Widget buildDetail() {
-    double padding = detailWidgetPadding * 2;
+    final double padding = detailWidgetPadding * 2;
+    final textPadding = EdgeInsets.only(top: detailWidgetPadding, bottom: detailWidgetPadding);
     return Container(
         padding: EdgeInsets.only(left: padding, top: padding, right: padding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildRow('Number : ${node != null ? node.number : 'none'}'),
-            buildRow('Id : ${node != null ? node.id : 'none'}'),
-            buildRow('Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time.toLocal()) : 'none'}'),
-            buildRow('Producer : ${node != null ? node.producer : 'none'}'),
+            CommonWidget.getTextContainer(
+              'Number : ${node != null ? node.number : 'none'}',
+              padding: textPadding,
+            ),
+            CommonWidget.getTextContainer(
+              'Id : ${node != null ? node.id : 'none'}',
+              padding: textPadding,
+              textAlign: TextAlign.start,
+            ),
+            CommonWidget.getTextContainer(
+              'Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time.toLocal()) : 'none'}',
+              padding: textPadding,
+            ),
+            CommonWidget.getTextContainer(
+              'Producer : ${node != null ? node.producer : 'none'}',
+              padding: textPadding,
+            ),
             Expanded(child: buildListView()),
           ],
         )
-    );
-  }
-
-  Widget buildRow(String text, {bool isBold = false}) {
-    return Container(
-      padding: EdgeInsets.only(top: detailWidgetPadding, bottom: detailWidgetPadding),
-      child: buildRowText(text, isBold: isBold)
-    );
-  }
-
-  Widget buildRowText(String text, {bool isBold = false}) {
-    return Text(
-        text,
-        textAlign: TextAlign.start,
-        style: TextStyle(fontSize: 14.0, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
     );
   }
 
@@ -115,7 +115,7 @@ class DetailState extends State<DetailWidget> {
     return ListView.builder(
       itemCount: actions.length * 2,
       itemBuilder: (context, i) {
-        if (i.isOdd) return buildDivider();
+        if (i.isOdd) return CommonWidget.getDivider();
 
         int index = i ~/ 2;
         if (index == actions.length - 1) {
@@ -134,34 +134,33 @@ class DetailState extends State<DetailWidget> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
-                width: 50.0,
-                child: buildRowText(action.accountSeq.toString()),
+              CommonWidget.getTextContainer(
+                action.accountSeq.toString(),
+                width: 60.0,
               ),
-              Container(
-                width: 180.0,
-                child: buildRowText(action.getBlockTimeString()),
+              Expanded(child: CommonWidget.getText(
+                action.name,
+                textAlign: TextAlign.start,
+              )),
+              CommonWidget.getTextContainer(
+                action.getBlockTimeString(),
+                width: 160.0,
               ),
-              Expanded(child: buildRowText(action.name)),
             ],
           ),
           Container(
             padding: EdgeInsets.only(top: detailWidgetPadding / 2),
             child: Row(
               children: <Widget>[
-                Expanded(child: buildRowText(action.getDataFormat())),
+                Expanded(child: CommonWidget.getText(
+                  action.getDataFormat(),
+                  textAlign: TextAlign.start,
+                )),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildDivider() {
-    return Container(
-      height: 1.0,
-      color: Colors.grey,
     );
   }
 
