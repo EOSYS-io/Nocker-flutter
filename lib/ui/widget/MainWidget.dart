@@ -81,9 +81,9 @@ class MainState extends State<MainWidget> {
     }
 
     Color color;
-    if (node.id == null) {
+    if (node.id == null || node.time == null) {
       color = Color.fromARGB(128, 255, 0, 0);
-    } else if (node.number < presenter.maxHeight - 10) {
+    } else if (node.time.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch - (5 * 1000)) {
       color = Color.fromARGB(128, 255, 255, 0);
     } else {
       color = Colors.white;
