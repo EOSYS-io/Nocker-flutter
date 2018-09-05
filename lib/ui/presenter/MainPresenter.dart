@@ -106,6 +106,9 @@ class MainPresenter extends WidgetsBindingObserver {
         .catchError((error) {
           print(error.toString());
           node.setError();
+          if (node.endpointsLength == 1) {
+            getBPInfo(node);
+          }
         });
   }
 
@@ -121,7 +124,8 @@ class MainPresenter extends WidgetsBindingObserver {
               rows.indexOf(row) + 1,
               double.parse(row['total_votes']),
               totalVotes
-          ));
+            )
+          );
         })
         .then((rows) {
           nodes.clear();
@@ -129,7 +133,7 @@ class MainPresenter extends WidgetsBindingObserver {
           nodes.sort((a, b) => a.rank.compareTo(b.rank));
 
           nodes.forEach((node) async {
-            node.endpoint = await db.getEndpoint(node.title);
+            node.setEndpoints(await db.getEndpoints(node.title));
             if (node.endpoint == null) {
               getBPInfo(node);
             }
@@ -150,34 +154,48 @@ class MainPresenter extends WidgetsBindingObserver {
         .then((response) => response.body)
         .then((body) {
           List nodes = json.decode(body)['nodes'];
-          nodes.forEach((n) {
-            Map map = n;
-            // TODO : eoslaomaocom 연결할 때 FormatException: Unexpected end of input (at character 1) 발생해서 우회
-            // eosamsterdam 연결할 때 SSL HandshakeException: Handshake error in client 발생해서 우회
-            if (map.containsKey('ssl_endpoint') && map['ssl_endpoint'].toString().isNotEmpty && node.title != 'eosamsterdam') {
-              node.endpoint = map['ssl_endpoint'].toString();
-              return;
+          List<String> endpoints = <String>[];
+          nodes.forEach((nodeMap) {
+            String endpoint = getEndpoint(nodeMap, 'ssl_endpoint');
+            if (endpoint != null) {
+              endpoints.add(endpoint);
             }
-            if (map.containsKey('api_endpoint') && map['api_endpoint'].toString().isNotEmpty) {
-              node.endpoint = map['api_endpoint'].toString();
-              return;
+
+            endpoint = getEndpoint(nodeMap, 'api_endpoint');
+            if (endpoint != null) {
+              endpoints.add(endpoint);
             }
           });
 
-          if (node.endpoint != null) {
-            if (node.endpoint[node.endpoint.length - 1] == '/') {
-              node.endpoint = node.endpoint.substring(0, node.endpoint.length - 1);
-            }
-
-            db.insert(node);
+          if (endpoints.isNotEmpty) {
+            node.setEndpoints(endpoints);
+            endpoints.forEach((endpoint) {
+              db.insert(node.title, node.url, endpoint);
+            });
 
             fetchNode(node);
           }
         }).catchError((error) {
           print(error);
           if (isInit) {
+            List<String> splits = node.url.split('://');
+            if (splits[0] == 'http') {
+              node.url = 'https://${splits[1]}';
+            } else {
+              node.url = 'http://${splits[1]}';
+            }
             getBPInfo(node);
           }
         });
+  }
+
+  String getEndpoint(Map map, String key) {
+    String endpoint = map[key];
+    if (endpoint == null || endpoint.isEmpty) return null;
+
+    if (endpoint[endpoint.length - 1] == '/') {
+      endpoint = endpoint.substring(0, endpoint.length - 1);
+    }
+    return endpoint;
   }
 }

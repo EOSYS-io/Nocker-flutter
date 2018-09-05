@@ -2,17 +2,22 @@ import 'package:intl/intl.dart';
 
 class EosNode {
   final String title;
-  final String url;
+  String url;
   final int rank;
   final double votes;
   double votePercents;
-  String endpoint;
   String version;
   int number = 0;
   int lastNumber = 0;
   String id;
   DateTime time;
   String producer;
+
+  List<String> _endpoints = <String>[];
+  int _endpointIndex = -1;
+
+  String get endpoint => _endpointIndex >= 0 ? _endpoints[_endpointIndex] : null;
+  int get endpointsLength => _endpoints.length;
 
   EosNode(this.title, this.url, this.rank, this.votes, double totalVotes) {
     votePercents = (totalVotes > 0 ? votes / totalVotes * 100 : 0.0);
@@ -34,5 +39,26 @@ class EosNode {
     id = null;
     time = null;
     producer = null;
+
+    increaseEndpointIndex();
+  }
+
+  void setEndpoints(List<String> endpoints) {
+    if (endpoints == null || endpoints.isEmpty) return;
+
+    _endpoints.clear();
+    _endpoints.addAll(endpoints);
+    _endpointIndex = 0;
+  }
+
+  void increaseEndpointIndex() {
+    if (_endpoints.isEmpty) {
+      _endpointIndex = -1;
+      return;
+    }
+
+    if (++_endpointIndex >= _endpoints.length) {
+      _endpointIndex %= _endpoints.length;
+    }
   }
 }

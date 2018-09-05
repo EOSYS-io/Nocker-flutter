@@ -35,22 +35,27 @@ class ProducerProvider {
     );
   }
 
-  void insert(EosNode node) async {
+  void insert(String title, String url, String endpoint) async {
     db.insert(tableName, {
-      columnTitle: node.title,
-      columnUrl: node.url,
-      columnEndpoint: node.endpoint
-    });
+      columnTitle: title,
+      columnUrl: url,
+      columnEndpoint: endpoint
+    }).catchError((error) => print(error));
   }
 
   Future<String> getEndpoint(String title) async {
-    List result = await db.query(
+    List result = await getEndpoints(title);
+    return result != null ? result.first[columnEndpoint] : null;
+  }
+
+  Future<List<String>> getEndpoints(String title) async {
+    List<String> result = await db.query(
         tableName,
-        columns: [columnTitle, columnEndpoint],
+        columns: [columnEndpoint],
         where: '$columnTitle = ?',
         whereArgs: [title]
-    );
-    return result.length > 0 ? result.first[columnEndpoint] : null;
+    ).then((list) => list.map((map) => map[columnEndpoint].toString()).toList());
+    return (result == null || result.length > 0) ? result : null;
   }
 
   Future close() async {
