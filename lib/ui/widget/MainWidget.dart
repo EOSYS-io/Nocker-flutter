@@ -75,13 +75,14 @@ class MainState extends State<MainWidget> {
   }
 
   Widget buildListTile(EosNode node) {
-    String time = 'none';
+    String number = node.number > 0 ? node.number.toString() : '';
+    String time = '';
     if (node != null && node.time != null) {
       time = DateFormat('yyMMdd\nHH:mm:ss').format(node.time.toLocal());
     }
 
     Color color;
-    if (node.id == null) {
+    if (node.isError()) {
       color = Color.fromARGB(128, 255, 0, 0);
     } else if (node.number < presenter.maxHeight - 10) {
       color = Color.fromARGB(128, 255, 255, 0);
@@ -91,11 +92,11 @@ class MainState extends State<MainWidget> {
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: buildListRow(node.rank, '${node.title}\n${node.votePercents.toStringAsFixed(3)}%', node.number, time, color: color),
+      child: buildListRow(node.rank, '${node.title}\n${node.votePercents.toStringAsFixed(3)}%', number, time, color: color),
     );
   }
 
-  Widget buildListRow(final rank, final title, final number, final time, {Color color = Colors.white, bool isBold = false}) {
+  Widget buildListRow(final rank, final String title, final String number, final String time, {Color color = Colors.white, bool isBold = false}) {
     return Container(
       color: color,
       padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
@@ -109,7 +110,7 @@ class MainState extends State<MainWidget> {
           ),
           Expanded(child: CommonWidget.getText(title, isBold: isBold)),
           CommonWidget.getTextContainer(
-              number.toString(),
+              number,
               width: 110.0,
               isBold: isBold
           ),

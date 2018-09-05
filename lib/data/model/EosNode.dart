@@ -13,6 +13,8 @@ class EosNode {
   DateTime time;
   String producer;
 
+  bool _isError = false;
+
   List<String> _endpoints = <String>[];
   int _endpointIndex = -1;
 
@@ -30,7 +32,11 @@ class EosNode {
     id = json['head_block_id'];
     time = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['head_block_time'], true);
     producer = json['head_block_producer'];
+
+    _isError = false;
   }
+
+  bool isError() => _isError;
 
   void setError() {
     version = null;
@@ -39,6 +45,8 @@ class EosNode {
     id = null;
     time = null;
     producer = null;
+
+    _isError = true;
 
     increaseEndpointIndex();
   }

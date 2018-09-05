@@ -89,20 +89,20 @@ class DetailState extends State<DetailWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CommonWidget.getTextContainer(
-              'Number : ${node != null ? node.number : 'none'}',
+              'Number : ${node != null ? node.number : ''}',
               padding: textPadding,
             ),
             CommonWidget.getTextContainer(
-              'Id : ${node != null ? node.id : 'none'}',
+              'Id : ${node != null ? node.id : ''}',
               padding: textPadding,
               textAlign: TextAlign.start,
             ),
             CommonWidget.getTextContainer(
-              'Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time.toLocal()) : 'none'}',
+              'Time : ${node != null && node.time != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(node.time.toLocal()) : ''}',
               padding: textPadding,
             ),
             CommonWidget.getTextContainer(
-              'Producer : ${node != null ? node.producer : 'none'}',
+              'Producer : ${node != null ? node.producer : ''}',
               padding: textPadding,
             ),
             Expanded(child: buildListView()),

@@ -67,6 +67,7 @@ class MainPresenter extends WidgetsBindingObserver {
 
     await db.open();
     getProducers();
+    maxHeight = 0;
   }
 
   void onPause() async {
