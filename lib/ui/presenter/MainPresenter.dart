@@ -65,10 +65,8 @@ class MainPresenter extends WidgetsBindingObserver {
       subject.add(nodes);
     });
 
-    if (nodes.isEmpty) {
-      await db.open();
-      getProducers();
-    }
+    await db.open();
+    getProducers();
   }
 
   void onPause() async {
