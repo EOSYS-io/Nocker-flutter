@@ -92,7 +92,7 @@ class MainState extends State<MainWidget> {
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: buildListRow(node.rank, '${node.title}\n${node.votePercents.toStringAsFixed(3)}%', number, time, color: color),
+      child: buildListRow(node.rank, '${node.title}\n${node.votesString}(${node.votesPercentString})', number, time, color: color),
     );
   }
 
@@ -108,15 +108,17 @@ class MainState extends State<MainWidget> {
               width: 30.0,
               isBold: isBold
           ),
-          Expanded(child: CommonWidget.getText(title, isBold: isBold)),
+          Expanded(
+              child: CommonWidget.getText(title, isBold: isBold)
+          ),
           CommonWidget.getTextContainer(
               number,
-              width: 110.0,
+              width: 100.0,
               isBold: isBold
           ),
           CommonWidget.getTextContainer(
               time,
-              width: 100.0,
+              width: 80.0,
               isBold: isBold
           ),
         ],
