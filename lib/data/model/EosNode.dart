@@ -9,6 +9,7 @@ class EosNode {
   final double _votes;
   double _votesWithoutWeight;
   double _votePercents;
+  String logoUrl;
   String version;
   int number = 0;
   int lastNumber = 0;

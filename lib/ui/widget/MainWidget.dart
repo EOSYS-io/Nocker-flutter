@@ -57,7 +57,7 @@ class MainState extends State<MainWidget> {
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
-          child: buildListRow('R', 'Title', 'Number', 'Time', isBold: true),
+          child: buildListRow('R', null, 'Title', 'Number', 'Time', isBold: true),
         ),
         Expanded(
             child: ListView.builder(
@@ -92,11 +92,11 @@ class MainState extends State<MainWidget> {
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: buildListRow(node.rank, '${node.title}\n${node.votesString}(${node.votesPercentString})', number, time, color: color),
+      child: buildListRow(node.rank, node.logoUrl, '${node.title}\n${node.votesString}(${node.votesPercentString})', number, time, color: color),
     );
   }
 
-  Widget buildListRow(final rank, final String title, final String number, final String time, {Color color = Colors.white, bool isBold = false}) {
+  Widget buildListRow(final rank, final String logoUrl, final String title, final String number, final String time, {Color color = Colors.white, bool isBold = false}) {
     return Container(
       color: color,
       padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
@@ -108,6 +108,7 @@ class MainState extends State<MainWidget> {
               width: 30.0,
               isBold: isBold
           ),
+          CommonWidget.getImageWidget(logoUrl),
           Expanded(
               child: CommonWidget.getText(title, isBold: isBold)
           ),

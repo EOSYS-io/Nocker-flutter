@@ -132,6 +132,7 @@ class MainPresenter extends WidgetsBindingObserver {
           nodes.sort((a, b) => a.rank.compareTo(b.rank));
 
           nodes.forEach((node) async {
+            node.logoUrl = await db.getLogoUrl(node.title);
             node.setEndpoints(await db.getEndpoints(node.title));
             if (node.endpoint == null) {
               getBPInfo(node);
@@ -152,7 +153,13 @@ class MainPresenter extends WidgetsBindingObserver {
     service.getBPInfo(node.url)
         .then((response) => response.body)
         .then((body) {
-          List nodes = json.decode(body)['nodes'];
+          Map obj = json.decode(body);
+          String logoUrl = obj['org']['branding']['logo_256'];
+          if (logoUrl == null || logoUrl.isEmpty) {
+            logoUrl = obj['org']['branding']['logo_1024'];
+          }
+
+          List nodes = obj['nodes'];
           List<String> endpoints = <String>[];
           nodes.forEach((nodeMap) {
             String endpoint = getEndpoint(nodeMap, 'ssl_endpoint');
@@ -169,7 +176,7 @@ class MainPresenter extends WidgetsBindingObserver {
           if (endpoints.isNotEmpty) {
             node.setEndpoints(endpoints);
             endpoints.forEach((endpoint) {
-              db.insert(node.title, node.url, endpoint);
+              db.insert(node.title, node.url, endpoint, logoUrl);
             });
 
             fetchNode(node);

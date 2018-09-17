@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CommonWidget {
@@ -33,5 +34,20 @@ class CommonWidget {
       height: 1.0,
       color: Colors.grey,
     );
+  }
+
+  static Widget getImageWidget(String url, {double width = 24.0, double height = 24.0}) {
+    if (url != null && url.isNotEmpty) {
+      return CachedNetworkImage(
+        width: width,
+        height: height,
+        imageUrl: url,
+      );
+    } else {
+      return Container(
+        width: width,
+        height: height,
+      );
+    }
   }
 }
