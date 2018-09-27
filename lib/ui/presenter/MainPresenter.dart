@@ -158,6 +158,7 @@ class MainPresenter extends WidgetsBindingObserver {
           if (logoUrl == null || logoUrl.isEmpty) {
             logoUrl = obj['org']['branding']['logo_1024'];
           }
+          node.logoUrl = logoUrl;
 
           List nodes = obj['nodes'];
           List<String> endpoints = <String>[];
