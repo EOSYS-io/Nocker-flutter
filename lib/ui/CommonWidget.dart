@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 
 class CommonWidget {
@@ -37,16 +38,24 @@ class CommonWidget {
   }
 
   static Widget getImageWidget(String url, {double width = 24.0, double height = 24.0}) {
-    if (url != null && url.isNotEmpty) {
+    if (url == null || url.isEmpty) {
+      return Container(
+        width: width,
+        height: height,
+      );
+    } else if (url.substring(url.length - 3) == 'svg') {
+      return Container(
+        width: width,
+        height: height,
+        child: SvgPicture.network(
+          url,
+        ),
+      );
+    } else {
       return CachedNetworkImage(
         width: width,
         height: height,
         imageUrl: url,
-      );
-    } else {
-      return Container(
-        width: width,
-        height: height,
       );
     }
   }

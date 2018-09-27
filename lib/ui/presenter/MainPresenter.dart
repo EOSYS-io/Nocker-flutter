@@ -160,6 +160,9 @@ class MainPresenter extends WidgetsBindingObserver {
           if (logoUrl == null || logoUrl.isEmpty) {
             logoUrl = obj['org']['branding']['logo_1024'];
           }
+          if (logoUrl == null || logoUrl.isEmpty) {
+            logoUrl = obj['org']['branding']['logo_svg'];
+          }
           node.logoUrl = logoUrl;
 
           List nodes = obj['nodes'];
