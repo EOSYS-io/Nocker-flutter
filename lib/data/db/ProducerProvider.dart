@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:nocker/data/model/EosNode.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -22,7 +21,7 @@ class ProducerProvider {
 
     final dbPath = await getDatabasesPath();
     String path = join(dbPath, databaseName);
-    db = await openDatabase(path, version: 2,
+    db = await openDatabase(path, version: 1,
         onCreate: (db, version) {
           db.execute('''
             create table $tableName (
@@ -34,20 +33,6 @@ class ProducerProvider {
             )
           ''');
         },
-        onUpgrade: (db, oldVersion, newVersion) async {
-          if (oldVersion == 1) {
-            await db.execute('drop table $tableName');
-            await db.execute('''
-              create table $tableName (
-                $columnId integer primary key autoincrement,
-                $columnTitle text not null,
-                $columnUrl text not null,
-                $columnEndpoint text not null,
-                $columnLogoUrl text
-              )
-            ''');
-          }
-        }
     );
   }
 
@@ -68,11 +53,6 @@ class ProducerProvider {
         whereArgs: [title]
     ).then((list) => list.map((map) => map[columnLogoUrl].toString()).toList());
     return (result == null || result.length > 0) ? result[0] : null;
-  }
-
-  Future<String> getEndpoint(String title) async {
-    List result = await getEndpoints(title);
-    return result != null ? result.first() : null;
   }
 
   Future<List<String>> getEndpoints(String title) async {
