@@ -7,8 +7,7 @@ import 'package:nocker/ui/presenter/DetailPresenter.dart';
 import 'package:nocker/ui/presenter/MainPresenter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-final double detailWidgetPadding = 8.0;
+import 'package:nocker/util/Constants.dart';
 
 class DetailWidget extends StatefulWidget {
   final MainPresenter presenter;
@@ -73,6 +72,7 @@ class DetailState extends State<DetailWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         title: Text(title),
       ),
       body: buildDetail(),

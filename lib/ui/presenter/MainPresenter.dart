@@ -156,14 +156,16 @@ class MainPresenter extends WidgetsBindingObserver {
         .then((response) => response.body)
         .then((body) {
           Map obj = json.decode(body);
-          String logoUrl = obj['org']['branding']['logo_256'];
-          if (logoUrl == null || logoUrl.isEmpty) {
-            logoUrl = obj['org']['branding']['logo_1024'];
+          if (obj['org'] != null && obj['org']['branding'] != null) {
+            String logoUrl = obj['org']['branding']['logo_256'];
+            if (logoUrl == null || logoUrl.isEmpty) {
+              logoUrl = obj['org']['branding']['logo_1024'];
+            }
+            if (logoUrl == null || logoUrl.isEmpty) {
+              logoUrl = obj['org']['branding']['logo_svg'];
+            }
+            node.logoUrl = logoUrl;
           }
-          if (logoUrl == null || logoUrl.isEmpty) {
-            logoUrl = obj['org']['branding']['logo_svg'];
-          }
-          node.logoUrl = logoUrl;
 
           List nodes = obj['nodes'];
           List<String> endpoints = <String>[];
@@ -182,7 +184,7 @@ class MainPresenter extends WidgetsBindingObserver {
           if (endpoints.isNotEmpty) {
             node.setEndpoints(endpoints);
             endpoints.forEach((endpoint) {
-              db.insert(node.title, node.url, endpoint, logoUrl);
+              db.insert(node.title, node.url, endpoint, node.logoUrl);
             });
 
             fetchNode(node);

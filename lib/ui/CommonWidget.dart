@@ -8,24 +8,27 @@ class CommonWidget {
       String text, {
         double width,
         double height,
+        EdgeInsets margin = EdgeInsets.zero,
         EdgeInsets padding = EdgeInsets.zero,
         TextAlign textAlign = TextAlign.center,
-        double fontSize = 14.0,
+        double fontSize = 12.0,
+        Color textColor = Colors.black,
         bool isBold = false
       }) {
     return Container(
       width: width,
       height: height,
+      margin: margin,
       padding: padding,
-      child: getText(text, textAlign: textAlign, fontSize: fontSize, isBold: isBold),
+      child: getText(text, textAlign: textAlign, fontSize: fontSize, color: textColor, isBold: isBold),
     );
   }
 
-  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 14.0, bool isBold = false}) {
+  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 14.0, Color color = Colors.black, bool isBold = false}) {
     return Text(
         text,
         textAlign: textAlign,
-        style: TextStyle(fontSize: fontSize, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
+        style: TextStyle(fontSize: fontSize, color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
     );
   }
 

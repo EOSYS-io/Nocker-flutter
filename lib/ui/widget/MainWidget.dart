@@ -1,12 +1,12 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/ui/CommonWidget.dart';
 import 'package:nocker/ui/presenter/MainPresenter.dart';
 import 'package:nocker/ui/widget/DetailWidget.dart';
+import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-final double mainWidgetPadding = 8.0;
 
 class MainWidget extends StatefulWidget {
   @override
@@ -42,35 +42,47 @@ class MainState extends State<MainWidget> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(localizations.appTitle),
-      ),
+      appBar: null,
       body: buildMain(),
     );
   }
 
   Widget buildMain() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
-          child: buildListRow('R', null, 'Title', 'Number', 'Time', isBold: true),
-        ),
-        Expanded(
-            child: ListView.builder(
-                itemCount: nodes.length * 2,
-                itemBuilder: (context, i) {
-                  if (i.isOdd) return CommonWidget.getDivider();
-
-                  int index = i ~/ 2;
-                  return buildListTile(nodes[index]);
-                },
-            )
-        )
-      ],
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+    return Container(
+      color: backgroundColor,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          Container(
+            height: statusBarHeight + headerHeight,
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: statusBarHeight),
+            color: primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 128.0,
+                  child: SvgPicture.asset('assets/nocker-title.svg'),
+                ),
+                CommonWidget.getTextContainer(
+                    'Made by eosyskoreabp',
+                    margin: EdgeInsets.only(top: 3.0),
+                    textColor: Colors.white
+                ),
+              ],
+            ),
+          ),
+          Container(
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: statusBarHeight + headerHeight + mainWidgetMargin, bottom: mainListItemMargin),
+                itemCount: nodes.length,
+                itemBuilder: (context, i) => buildListTile(nodes[i]),
+              )
+          )
+        ],
+      ),
     );
   }
 
@@ -78,49 +90,82 @@ class MainState extends State<MainWidget> {
     String number = node.number > 0 ? node.number.toString() : '';
     String time = '';
     if (node != null && node.time != null) {
-      time = DateFormat('yyMMdd\nHH:mm:ss').format(node.time.toLocal());
+      time = DateFormat('yyyyMMdd HH:mm:ss').format(node.time.toLocal());
     }
 
-    Color color;
+    Color textColor;
+    Widget image;
     if (node.isError()) {
-      color = Color.fromARGB(128, 255, 0, 0);
-    } else if (node.number < presenter.maxHeight - 10) {
-      color = Color.fromARGB(128, 255, 255, 0);
+      textColor = errorColor;
+      image = SvgPicture.asset('assets/img-red.svg');
+    } else if (0 < node.number && node.number < presenter.maxHeight - warningOffset) {
+      textColor = warningColor;
+      image = SvgPicture.asset('assets/img-yellow.svg');
     } else {
-      color = Colors.white;
+      textColor = Colors.black;
+      image = SvgPicture.asset('assets/img-blue.svg');
     }
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: buildListRow(node.rank, node.logoUrl, '${node.title}\n${node.votesString}(${node.votesPercentString})', number, time, color: color),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(itemBorderRadius)),
+        ),
+        margin: EdgeInsets.only(left: mainWidgetMargin, right: mainWidgetMargin, bottom: mainListItemMargin),
+        padding: EdgeInsets.only(left: itemHorizontalPadding, top: itemVerticalPadding, right: itemHorizontalPadding, bottom: itemVerticalPadding),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CommonWidget.getTextContainer(
+                    node.rank.toString(),
+                    width: 28.0,
+                    textColor: textColor,
+                    fontSize: listItemTitleSize,
+                ),
+                Expanded(
+                  child: CommonWidget.getTextContainer(
+                    node.title,
+                    margin: EdgeInsets.only(left: 8.0),
+                    textAlign: TextAlign.left,
+                    textColor: textColor,
+                    fontSize: listItemTitleSize,
+                    isBold: true,
+                  ),
+                ),
+                Container(
+                  width: 40.0,
+                  height: 40.0,
+                  child: image,
+                )
+              ],
+            ),
+            buildListItemRow(localizations.time, time),
+            buildListItemRow(localizations.block, number),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget buildListRow(final rank, final String logoUrl, final String title, final String number, final String time, {Color color = Colors.white, bool isBold = false}) {
+  Widget buildListItemRow(String title, String content) {
     return Container(
-      color: color,
-      padding: EdgeInsets.only(top: mainWidgetPadding, bottom: mainWidgetPadding),
+      margin: EdgeInsets.only(top: mainListItemMargin),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CommonWidget.getTextContainer(
-              rank.toString(),
-              width: 30.0,
-              isBold: isBold
+              title,
+              isBold: true
           ),
-          CommonWidget.getImageWidget(logoUrl),
           Expanded(
-              child: CommonWidget.getText(title, isBold: isBold)
-          ),
-          CommonWidget.getTextContainer(
-              number,
-              width: 100.0,
-              isBold: isBold
-          ),
-          CommonWidget.getTextContainer(
-              time,
-              width: 80.0,
-              isBold: isBold
+              child: CommonWidget.getText(
+                  content,
+                  textAlign: TextAlign.right,
+                  color: grayTextColor,
+              )
           ),
         ],
       ),
