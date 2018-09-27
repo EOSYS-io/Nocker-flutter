@@ -1,5 +1,7 @@
-name: eos_node_checker
-description: Eos node checker for Flutter
+name: nocker
+description: A new Flutter application.
+
+version: 1.0.0+1
 
 dependencies:
   flutter:

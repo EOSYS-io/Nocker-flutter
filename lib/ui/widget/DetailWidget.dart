@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:eos_node_checker/data/model/Action.dart';
-import 'package:eos_node_checker/data/model/EosNode.dart';
-import 'package:eos_node_checker/ui/CommonWidget.dart';
-import 'package:eos_node_checker/ui/presenter/DetailPresenter.dart';
-import 'package:eos_node_checker/ui/presenter/MainPresenter.dart';
+import 'package:nocker/data/model/Action.dart';
+import 'package:nocker/data/model/EosNode.dart';
+import 'package:nocker/ui/CommonWidget.dart';
+import 'package:nocker/ui/presenter/DetailPresenter.dart';
+import 'package:nocker/ui/presenter/MainPresenter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

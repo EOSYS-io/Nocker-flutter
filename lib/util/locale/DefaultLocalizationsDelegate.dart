@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eos_node_checker/util/locale/DefaultLocalizations.dart';
+import 'package:nocker/util/locale/DefaultLocalizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

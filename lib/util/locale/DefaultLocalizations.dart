@@ -9,10 +9,10 @@ class DefaultLocalizations {
 
   static Map<String, Map<String, String>> _localizedValues = {
     'en': {
-      'app_title': 'EOS Node Monitor',
+      'app_title': 'Nocker',
     },
     'ko': {
-      'app_title': 'EOS 노드 모니터',
+      'app_title': '노커',
     },
   };
 

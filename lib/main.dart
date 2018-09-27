@@ -1,12 +1,12 @@
-import 'package:eos_node_checker/ui/widget/MainWidget.dart';
-import 'package:eos_node_checker/util/locale/DefaultLocalizationsDelegate.dart';
+import 'package:nocker/ui/widget/MainWidget.dart';
+import 'package:nocker/util/locale/DefaultLocalizationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 void main() => runApp(MyApp());
 
-final String appTitle = 'EOS Node Monitor';
+final String appTitle = 'Nocker';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:eos_node_checker/data/db/ProducerProvider.dart';
-import 'package:eos_node_checker/data/model/EosNode.dart';
-import 'package:eos_node_checker/data/remote/HttpService.dart';
+import 'package:nocker/data/db/ProducerProvider.dart';
+import 'package:nocker/data/model/EosNode.dart';
+import 'package:nocker/data/remote/HttpService.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -43,6 +43,8 @@ class MainPresenter extends WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
         onPause();
+        break;
+      default:
         break;
     }
   }

@@ -1,4 +1,4 @@
-package com.chainpartners.eosys.eosnodechecker
+package io.eosys.nocker
 
 import android.os.Bundle
 
