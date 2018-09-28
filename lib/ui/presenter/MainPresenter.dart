@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:nocker/data/db/ProducerProvider.dart';
+import 'package:flutter/material.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/data/remote/HttpService.dart';
-import 'package:flutter/material.dart';
+import 'package:nocker/util/Constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MainPresenter extends WidgetsBindingObserver {
   final service = HttpService();
-  final db = ProducerProvider();
 
   final nodes = <EosNode>[];
   int maxHeight = 0;
@@ -18,20 +17,16 @@ class MainPresenter extends WidgetsBindingObserver {
   final subject = BehaviorSubject<List<EosNode>>();
   Timer timer;
   Timer refreshTimer;
-  bool isInit = false;
+  bool isResumed = false;
   int nodeIndex = 0;
 
   void init() {
-    isInit = true;
     WidgetsBinding.instance.addObserver(this);
-
     onResume();
   }
 
   void dispose() {
-    isInit = false;
     WidgetsBinding.instance.removeObserver(this);
-
     onPause();
   }
 
@@ -49,10 +44,11 @@ class MainPresenter extends WidgetsBindingObserver {
     }
   }
 
-  void onResume() async {
+  void onResume() {
+    isResumed = true;
     cancelTimer();
     
-    timer = Timer.periodic(Duration(milliseconds: 50), (t) {
+    timer = Timer.periodic(Duration(milliseconds: infoTimerDuration), (t) {
       if (nodes.isEmpty) {
         return;
       }
@@ -63,18 +59,17 @@ class MainPresenter extends WidgetsBindingObserver {
       fetchNode(nodes[nodeIndex++]);
     });
 
-    refreshTimer = Timer.periodic(Duration(milliseconds: 500), (t) {
+    refreshTimer = Timer.periodic(Duration(milliseconds: uiTimerDuration), (t) {
       subject.add(nodes);
     });
 
-    await db.open();
     getProducers();
     maxHeight = 0;
   }
 
-  void onPause() async {
+  void onPause() {
+    isResumed = false;
     cancelTimer();
-    await db.close();
   }
 
   void cancelTimer() {
@@ -96,9 +91,9 @@ class MainPresenter extends WidgetsBindingObserver {
     }
 
     service.getInfo(endpoint)
-        .then((response) => response.body)
+        .then((response) => json.decode(response.body))
         .then((body) {
-          node.fromJson(json.decode(body));
+          node.fromJson(body);
 
           if (node.number > maxHeight) {
             maxHeight = node.number;
@@ -133,19 +128,15 @@ class MainPresenter extends WidgetsBindingObserver {
           nodes.addAll(rows);
           nodes.sort((a, b) => a.rank.compareTo(b.rank));
 
-          nodes.forEach((node) async {
-            node.logoUrl = await db.getLogoUrl(node.title);
-            node.setEndpoints(await db.getEndpoints(node.title));
-            if (node.endpoint == null) {
-              getBPInfo(node);
-            }
+          nodes.forEach((node) {
+            getBPInfo(node);
           });
 
           subject.add(nodes);
         })
         .catchError((error) {
           print(error);
-          if (isInit) {
+          if (isResumed) {
             getProducers();
           }
         });
@@ -183,15 +174,13 @@ class MainPresenter extends WidgetsBindingObserver {
 
           if (endpoints.isNotEmpty) {
             node.setEndpoints(endpoints);
-            endpoints.forEach((endpoint) {
-              db.insert(node.title, node.url, endpoint, node.logoUrl);
-            });
-
             fetchNode(node);
+          } else {
+            node.setError();
           }
         }).catchError((error) {
           print(error);
-          if (isInit) {
+          if (isResumed) {
             List<String> splits = node.url.split('://');
             if (splits[0] == 'http') {
               node.url = 'https://${splits[1]}';

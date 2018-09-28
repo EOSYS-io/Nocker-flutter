@@ -11,13 +11,13 @@ class HttpService {
   Future<Response> getProducers() => post(
       "https://rpc.eosys.io:443/v1/chain/get_producers",
       body: json.encode({
-        "limit": producerCount.toString(),
+        "limit": producerCount,
         "json": "true"
       })
   );
 
   Future<Response> getBPInfo(String url) => get("$url/bp.json")
-      .timeout(Duration(seconds: 10));
+      .timeout(Duration(seconds: bpInfoTimeoutInterval));
 
   Future<Response> getActions(String name, {int lastSeq = 0, int count = 100}) {
     return post(

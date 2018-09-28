@@ -2,8 +2,11 @@ import 'dart:ui';
 
 // param
 final int timeoutInterval = 3;
+final int bpInfoTimeoutInterval = 10;
+final int infoTimerDuration = 50;
+final int uiTimerDuration = 500;
 final int producerCount = 30;
-final int warningOffset = 10;
+final int warningOffset = 7;
 
 // widget
 final double mainWidgetMargin = 16.0;
