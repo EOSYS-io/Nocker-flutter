@@ -43,6 +43,8 @@ class EosNode {
   String get endpoint => _endpointIndex >= 0 ? _endpoints[_endpointIndex] : null;
   int get endpointsLength => _endpoints.length;
 
+  String get timeString => time != null ? DateFormat('yyyyMMdd HH:mm:ss').format(time.toLocal()) : '';
+
   EosNode(this.title, this.url, this.rank, this._votes, double totalVotes) {
     _votesWithoutWeight = _votes / _calculateVoteWeight() / 10000;
     _votePercents = (totalVotes > 0 ? _votes / totalVotes * 100 : 0.0);

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CommonWidget {
 
@@ -24,7 +24,7 @@ class CommonWidget {
     );
   }
 
-  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 14.0, Color color = Colors.black, bool isBold = false}) {
+  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 12.0, Color color = Colors.black, bool isBold = false}) {
     return Text(
         text,
         textAlign: textAlign,
@@ -40,24 +40,24 @@ class CommonWidget {
     );
   }
 
-  static Widget getImageWidget(String url, {double width = 24.0, double height = 24.0}) {
+  static Widget getImageWidget(String url, {double size = 68.0}) {
     if (url == null || url.isEmpty) {
       return Container(
-        width: width,
-        height: height,
+        width: size,
+        height: size,
       );
     } else if (url.substring(url.length - 3) == 'svg') {
       return Container(
-        width: width,
-        height: height,
+        width: size,
+        height: size,
         child: SvgPicture.network(
           url,
         ),
       );
     } else {
       return CachedNetworkImage(
-        width: width,
-        height: height,
+        width: size,
+        height: size,
         imageUrl: url,
       );
     }

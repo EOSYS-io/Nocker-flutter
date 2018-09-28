@@ -25,15 +25,7 @@ class Action {
     data = act['data'];
   }
 
-  String getBlockTimeString() => DateFormat('yyyy-MM-dd HH:mm:ss').format(blockTime.toLocal());
+  String getBlockTimeString() => DateFormat('yyyyMMdd HH:mm:ss').format(blockTime.toLocal());
 
   String getDataString() => json.encode(data);
-
-  String getDataFormat() {
-    switch (name) {
-      case 'transfer':      return '${data['from']} -> ${data['to']}\n${data['quantity']}\n${data['memo']}';
-      case 'claimrewards':  return data['owner'];
-      default:              return json.encode(data);
-    }
-  }
 }

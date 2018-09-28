@@ -89,8 +89,8 @@ class MainState extends State<MainWidget> {
   Widget buildListTile(EosNode node) {
     String number = node.number > 0 ? node.number.toString() : '';
     String time = '';
-    if (node != null && node.time != null) {
-      time = DateFormat('yyyyMMdd HH:mm:ss').format(node.time.toLocal());
+    if (node != null) {
+      time = node.timeString;
     }
 
     Color textColor;
