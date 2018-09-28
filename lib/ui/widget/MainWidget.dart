@@ -108,44 +108,47 @@ class MainState extends State<MainWidget> {
 
     return GestureDetector(
       onTap: () { onItemClicked(node); },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(itemBorderRadius)),
-        ),
+      child: Card(
         margin: EdgeInsets.only(left: mainWidgetMargin, right: mainWidgetMargin, bottom: mainListItemMargin),
-        padding: EdgeInsets.only(left: itemHorizontalPadding, top: itemVerticalPadding, right: itemHorizontalPadding, bottom: itemVerticalPadding),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CommonWidget.getTextContainer(
+        color: Colors.white,
+        elevation: itemCardElevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(itemBorderRadius))
+        ),
+        child: Container(
+          padding: EdgeInsets.only(left: itemHorizontalPadding, top: itemVerticalPadding, right: itemHorizontalPadding, bottom: itemVerticalPadding),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CommonWidget.getTextContainer(
                     node.rank.toString(),
                     width: 28.0,
                     textColor: textColor,
                     fontSize: listItemTitleSize,
-                ),
-                Expanded(
-                  child: CommonWidget.getTextContainer(
-                    node.title,
-                    margin: EdgeInsets.only(left: 8.0),
-                    textAlign: TextAlign.left,
-                    textColor: textColor,
-                    fontSize: listItemTitleSize,
-                    isBold: true,
                   ),
-                ),
-                Container(
-                  width: 40.0,
-                  height: 40.0,
-                  child: image,
-                )
-              ],
-            ),
-            buildListItemRow(localizations.time, time),
-            buildListItemRow(localizations.block, number),
-          ],
+                  Expanded(
+                    child: CommonWidget.getTextContainer(
+                      node.title,
+                      margin: EdgeInsets.only(left: 8.0),
+                      textAlign: TextAlign.left,
+                      textColor: textColor,
+                      fontSize: listItemTitleSize,
+                      isBold: true,
+                    ),
+                  ),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: image,
+                  )
+                ],
+              ),
+              buildListItemRow(localizations.time, time),
+              buildListItemRow(localizations.block, number),
+            ],
+          ),
         ),
       ),
     );
