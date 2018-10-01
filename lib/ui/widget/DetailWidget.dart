@@ -167,18 +167,24 @@ class DetailState extends State<DetailWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CommonWidget.getTextContainer(
-                  action.accountSeq.toString(),
-                  width: 36.0,
-                  fontSize: detailItemTitleSize,
+                Container(
+                  constraints: BoxConstraints(
+                    minWidth: 36.0,
+                  ),
+                  child: CommonWidget.getText(
+                    action.accountSeq.toString(),
+                    fontSize: detailItemTitleSize,
+                  ),
                 ),
                 Expanded(
-                  child: CommonWidget.getTextContainer(
-                    action.name,
+                  child: Container(
                     margin: EdgeInsets.only(left: 4.0),
-                    textAlign: TextAlign.left,
-                    fontSize: detailItemTitleSize,
-                    isBold: true,
+                    child: Text(
+                      action.name,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: detailItemTitleSize, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
                 CommonWidget.getTextContainer(
