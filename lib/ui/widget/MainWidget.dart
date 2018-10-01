@@ -22,7 +22,7 @@ class MainState extends State<MainWidget> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              expandedHeight: 120.0,
+              expandedHeight: headerHeight,
               backgroundColor: primaryColor,
               floating: false,
               pinned: false,
