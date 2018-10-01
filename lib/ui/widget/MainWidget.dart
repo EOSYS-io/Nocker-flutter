@@ -83,7 +83,7 @@ class MainState extends State<MainWidget> {
     return Container(
       color: backgroundColor,
       child: ListView.builder(
-        padding: EdgeInsets.only(top: mainWidgetMargin, bottom: mainListItemMargin),
+        padding: EdgeInsets.only(top: defaultMargin, bottom: itemDefaultMargin),
         itemCount: nodes.length,
         itemBuilder: (context, i) => buildListTile(nodes[i]),
       ),
@@ -113,7 +113,7 @@ class MainState extends State<MainWidget> {
     return GestureDetector(
       onTap: () { onItemClicked(node); },
       child: Card(
-        margin: EdgeInsets.only(left: mainWidgetMargin, right: mainWidgetMargin, bottom: mainListItemMargin),
+        margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin, bottom: itemDefaultMargin),
         color: Colors.white,
         elevation: itemCardElevation,
         shape: RoundedRectangleBorder(
@@ -174,7 +174,7 @@ class MainState extends State<MainWidget> {
 
   Widget buildListItemRow(String title, String content) {
     return Container(
-      margin: EdgeInsets.only(top: mainListItemMargin),
+      margin: EdgeInsets.only(top: itemDefaultMargin),
       child: Row(
         children: <Widget>[
           CommonWidget.getTextContainer(

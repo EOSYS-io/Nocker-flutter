@@ -40,7 +40,7 @@ class DetailState extends State<DetailWidget> {
   void initState() {
     super.initState();
     subscription = mainPresenter.subject.stream.listen((list) {
-      EosNode node = list.firstWhere((one) => one.title == this.title );
+      EosNode node = list.firstWhere((one) => one.title == this.title);
       if (number != node.number) {
         setState(() {
           this.node = node;
@@ -85,15 +85,15 @@ class DetailState extends State<DetailWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: 148.0,
-              padding: EdgeInsets.only(left: 40.0, top: 20.0, right: 16.0, bottom: 20.0),
+              height: detailHeaderHeight,
+              padding: EdgeInsets.only(left: detailLogoMargin, top: detailVerticalMargin, right: defaultMargin, bottom: detailVerticalMargin),
               color: primaryColor,
               child: Row(
                 children: <Widget>[
                   CommonWidget.getImageWidget(node.logoUrl),
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.only(left: 40.0),
+                      margin: EdgeInsets.only(left: detailLogoMargin),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -121,7 +121,7 @@ class DetailState extends State<DetailWidget> {
         CommonWidget.getTextContainer(
           title,
           textColor: Colors.white,
-          fontSize: 14.0,
+          fontSize: detailItemTitleSize,
           isBold: true
         ),
         Expanded(
@@ -136,21 +136,24 @@ class DetailState extends State<DetailWidget> {
   }
 
   Widget buildListView() {
-    return ListView.builder(
-      padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-      itemCount: actions.length,
-      itemBuilder: (context, i) {
-        if (i == actions.length - 1) {
-          detailPresenter.getActions();
-        }
-        return buildListTile(actions[i]);
-      },
+    return Container(
+      color: backgroundColor,
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: defaultMargin, bottom: itemDefaultMargin),
+        itemCount: actions.length,
+        itemBuilder: (context, i) {
+          if (i == actions.length - 1) {
+            detailPresenter.getActions();
+          }
+          return buildListTile(actions[i]);
+        },
+      ),
     );
   }
 
   Widget buildListTile(Action action) {
     return Card(
-      margin: EdgeInsets.only(left: mainWidgetMargin, right: mainWidgetMargin, bottom: mainListItemMargin),
+      margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin, bottom: itemDefaultMargin),
       color: Colors.white,
       elevation: itemCardElevation,
       shape: RoundedRectangleBorder(
@@ -167,14 +170,14 @@ class DetailState extends State<DetailWidget> {
                 CommonWidget.getTextContainer(
                   action.accountSeq.toString(),
                   width: 36.0,
-                  fontSize: 14.0,
+                  fontSize: detailItemTitleSize,
                 ),
                 Expanded(
                   child: CommonWidget.getTextContainer(
                     action.name,
                     margin: EdgeInsets.only(left: 4.0),
                     textAlign: TextAlign.left,
-                    fontSize: 14.0,
+                    fontSize: detailItemTitleSize,
                     isBold: true,
                   ),
                 ),
@@ -185,7 +188,7 @@ class DetailState extends State<DetailWidget> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 8.0),
+              margin: EdgeInsets.only(top: itemDefaultMargin),
               child: buildActionData(action),
             ),
           ],
@@ -200,78 +203,43 @@ class DetailState extends State<DetailWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CommonWidget.getTextContainer(
-              '${action.data['from']} -> ${action.data['to']}',
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              action.data['quantity'],
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              action.data['memo'],
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
+            buildActionContent('${action.data['from']} -> ${action.data['to']}'),
+            buildActionContent(action.data['quantity'], topMargin: true),
+            buildActionContent(action.data['memo'], topMargin: true),
           ],
         );
       case 'delegatebw':
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CommonWidget.getTextContainer(
-              '${action.data['from']} -> ${action.data['receiver']}',
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              'Stake CPU ${action.data['stake_cpu_quantity']}',
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              'Stake NET ${action.data['stake_net_quantity']}',
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              action.data['transfer'].toString(),
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
+            buildActionContent('${action.data['from']} -> ${action.data['receiver']}'),
+            buildActionContent('Stake CPU ${action.data['stake_cpu_quantity']}', topMargin: true),
+            buildActionContent('Stake NET ${action.data['stake_net_quantity']}', topMargin: true),
+            buildActionContent(action.data['transfer'].toString(), topMargin: true),
           ],
         );
       case 'buyrambytes':
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CommonWidget.getTextContainer(
-              '${action.data['payer']} -> ${action.data['receiver']}',
-              textAlign: TextAlign.left,
-            ),
-            CommonWidget.getTextContainer(
-              '${action.data['bytes'].toString()} Bytes',
-              margin: EdgeInsets.only(top: 4.0),
-              textAlign: TextAlign.left,
-            ),
+            buildActionContent('${action.data['payer']} -> ${action.data['receiver']}'),
+            buildActionContent('${action.data['bytes'].toString()} Bytes', topMargin: true),
           ],
         );
       case 'claimrewards':
-        return CommonWidget.getTextContainer(
-          action.data['owner'],
-          textAlign: TextAlign.left,
-        );
+        return buildActionContent(action.data['owner']);
       case 'broadcast':
-        return CommonWidget.getTextContainer(
-          action.data['message'],
-          textAlign: TextAlign.left,
-        );
+        return buildActionContent(action.data['message']);
       default:
-        return CommonWidget.getTextContainer(
-            action.getDataString(),
-            textAlign: TextAlign.left,
-        );
+        return buildActionContent(action.getDataString());
     }
   }
 
+  Widget buildActionContent(String text, {bool topMargin = false}) {
+    return CommonWidget.getTextContainer(
+      text,
+      margin: topMargin ? EdgeInsets.only(top: itemInnerMargin) : EdgeInsets.zero,
+      textAlign: TextAlign.left,
+    );
+  }
 }

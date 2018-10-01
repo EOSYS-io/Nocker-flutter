@@ -9,17 +9,21 @@ final int producerCount = 30;
 final int warningOffset = 7;
 
 // widget
-final double mainWidgetMargin = 16.0;
-final double mainListItemMargin = 8.0;
-final double detailWidgetPadding = 8.0;
+final double defaultMargin = 16.0;
+final double itemDefaultMargin = 8.0;
 final double headerHeight = 136.0;
+final double detailHeaderHeight = 148.0;
+final double detailLogoMargin = 40.0;
+final double detailVerticalMargin = 20.0;
 final double itemVerticalPadding = 20.0;
 final double itemHorizontalPadding = 24.0;
 final double itemCardElevation = 2.0;
 final double itemBorderRadius = 8.0;
+final double itemInnerMargin = 4.0;
 
 // text
 final double listItemTitleSize = 20.0;
+final double detailItemTitleSize = 14.0;
 
 // color
 final Color primaryColor = Color.fromARGB(255, 0, 55, 171);
