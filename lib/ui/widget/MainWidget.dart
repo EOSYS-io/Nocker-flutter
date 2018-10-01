@@ -129,13 +129,27 @@ class MainState extends State<MainWidget> {
                     fontSize: listItemTitleSize,
                   ),
                   Expanded(
-                    child: CommonWidget.getTextContainer(
-                      node.title,
-                      margin: EdgeInsets.only(left: 8.0),
-                      textAlign: TextAlign.left,
-                      textColor: textColor,
-                      fontSize: listItemTitleSize,
-                      isBold: true,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        CommonWidget.getTextContainer(
+                          node.title,
+                          margin: EdgeInsets.only(left: 8.0),
+                          textAlign: TextAlign.left,
+                          textColor: textColor,
+                          fontSize: listItemTitleSize,
+                          isBold: true,
+                        ),
+                        Expanded(
+                          child: CommonWidget.getTextContainer(
+                            '(${node.votesPercentString})',
+                            margin: EdgeInsets.only(left: 4.0, right: 8.0, bottom: 2.0),
+                            textAlign: TextAlign.left,
+                            textColor: textColor == Colors.black ? grayTextColor : textColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(

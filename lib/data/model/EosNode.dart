@@ -29,13 +29,13 @@ class EosNode {
     double unit = 1000.0;
     int i;
     for (i = 0; i < unitText.length; i++) {
-      if (votes < unit) break;
+      if (votes < unit * unit) break;
       votes /= unit;
     }
     if (i == unitText.length) {
       i--;
     }
-    return '${votes.toStringAsFixed(3)}${unitText[i]}';
+    return '${NumberFormat.decimalPattern().format(votes.toInt())}${unitText[i]}';
   }
 
   String get votesPercentString => '${_votePercents.toStringAsFixed(3)}%';

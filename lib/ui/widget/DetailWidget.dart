@@ -97,7 +97,7 @@ class DetailState extends State<DetailWidget> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          buildDetailRow(localizations.votes, '${node.votesString}(${node.votesPercentString})'),
+                          buildDetailRow(localizations.votes, '${node.votesString} (${node.votesPercentString})'),
                           buildDetailRow(localizations.time, node.timeString),
                           buildDetailRow(localizations.block, node.number > 0 ? node.number.toString() : ''),
                           buildDetailRow(localizations.producer, node.producer != null ? node.producer : ''),
@@ -216,9 +216,54 @@ class DetailState extends State<DetailWidget> {
             ),
           ],
         );
+      case 'delegatebw':
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CommonWidget.getTextContainer(
+              '${action.data['from']} -> ${action.data['receiver']}',
+              textAlign: TextAlign.left,
+            ),
+            CommonWidget.getTextContainer(
+              'Stake CPU ${action.data['stake_cpu_quantity']}',
+              margin: EdgeInsets.only(top: 4.0),
+              textAlign: TextAlign.left,
+            ),
+            CommonWidget.getTextContainer(
+              'Stake NET ${action.data['stake_net_quantity']}',
+              margin: EdgeInsets.only(top: 4.0),
+              textAlign: TextAlign.left,
+            ),
+            CommonWidget.getTextContainer(
+              action.data['transfer'].toString(),
+              margin: EdgeInsets.only(top: 4.0),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        );
+      case 'buyrambytes':
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CommonWidget.getTextContainer(
+              '${action.data['payer']} -> ${action.data['receiver']}',
+              textAlign: TextAlign.left,
+            ),
+            CommonWidget.getTextContainer(
+              '${action.data['bytes'].toString()} Bytes',
+              margin: EdgeInsets.only(top: 4.0),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        );
       case 'claimrewards':
         return CommonWidget.getTextContainer(
           action.data['owner'],
+          textAlign: TextAlign.left,
+        );
+      case 'broadcast':
+        return CommonWidget.getTextContainer(
+          action.data['message'],
           textAlign: TextAlign.left,
         );
       default:
