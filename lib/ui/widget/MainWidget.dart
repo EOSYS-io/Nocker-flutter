@@ -6,7 +6,6 @@ import 'package:nocker/ui/widget/DetailWidget.dart';
 import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizations.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MainWidget extends StatefulWidget {
   @override
@@ -41,47 +40,52 @@ class MainState extends State<MainWidget> {
       localizations = DefaultLocalizations.of(context);
     }
 
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: null,
-      body: buildMain(),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 120.0,
+              backgroundColor: primaryColor,
+              floating: false,
+              pinned: false,
+              flexibleSpace: Container(
+                height: statusBarHeight + headerHeight,
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(top: statusBarHeight),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 128.0,
+                      height: 32.0,
+                      child: SvgPicture.asset('assets/nocker-title.svg'),
+                    ),
+                    CommonWidget.getTextContainer(
+                      'Made by eosyskoreabp',
+                      margin: EdgeInsets.only(top: 3.0),
+                      textColor: Colors.white
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ];
+        },
+        body: buildMain(),
+      ),
     );
   }
 
   Widget buildMain() {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Container(
       color: backgroundColor,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          Container(
-            height: statusBarHeight + headerHeight,
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(top: statusBarHeight),
-            color: primaryColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 128.0,
-                  child: SvgPicture.asset('assets/nocker-title.svg'),
-                ),
-                CommonWidget.getTextContainer(
-                    'Made by eosyskoreabp',
-                    margin: EdgeInsets.only(top: 3.0),
-                    textColor: Colors.white
-                ),
-              ],
-            ),
-          ),
-          Container(
-              child: ListView.builder(
-                padding: EdgeInsets.only(top: statusBarHeight + headerHeight + mainWidgetMargin, bottom: mainListItemMargin),
-                itemCount: nodes.length,
-                itemBuilder: (context, i) => buildListTile(nodes[i]),
-              )
-          )
-        ],
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: mainWidgetMargin, bottom: mainListItemMargin),
+        itemCount: nodes.length,
+        itemBuilder: (context, i) => buildListTile(nodes[i]),
       ),
     );
   }
