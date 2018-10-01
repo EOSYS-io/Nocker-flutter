@@ -59,6 +59,7 @@ class CommonWidget {
         width: size,
         height: size,
         imageUrl: url,
+        fadeInDuration: Duration.zero,
       );
     }
   }
