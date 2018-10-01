@@ -13,33 +13,8 @@ class MainWidget extends StatefulWidget {
 }
 
 class MainState extends State<MainWidget> {
-  MainPresenter presenter = MainPresenter();
-  DefaultLocalizations localizations;
-  List<EosNode> nodes = <EosNode>[];
-
-  @override
-  void initState() {
-    super.initState();
-    presenter.init();
-    presenter.subject.stream.listen((list) {
-      setState(() {
-        nodes = list;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    presenter.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (localizations == null) {
-      localizations = DefaultLocalizations.of(context);
-    }
-
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: null,
@@ -74,12 +49,46 @@ class MainState extends State<MainWidget> {
             ),
           ];
         },
-        body: buildMain(),
+        body: MainListWidget(),
       ),
     );
   }
+}
 
-  Widget buildMain() {
+
+class MainListWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MainListState();
+}
+
+class MainListState extends State<MainListWidget> {
+  MainPresenter presenter = MainPresenter();
+  DefaultLocalizations localizations;
+  List<EosNode> nodes = <EosNode>[];
+
+  @override
+  void initState() {
+    super.initState();
+    presenter.init();
+    presenter.subject.stream.listen((list) {
+      setState(() {
+        nodes = list;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    presenter.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (localizations == null) {
+      localizations = DefaultLocalizations.of(context);
+    }
+
     return Container(
       color: backgroundColor,
       child: ListView.builder(
@@ -117,7 +126,7 @@ class MainState extends State<MainWidget> {
         color: Colors.white,
         elevation: itemCardElevation,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(itemBorderRadius))
+            borderRadius: BorderRadius.all(Radius.circular(itemBorderRadius))
         ),
         child: Container(
           padding: EdgeInsets.only(left: itemHorizontalPadding, top: itemVerticalPadding, right: itemHorizontalPadding, bottom: itemVerticalPadding),
@@ -183,9 +192,9 @@ class MainState extends State<MainWidget> {
           ),
           Expanded(
               child: CommonWidget.getText(
-                  content,
-                  textAlign: TextAlign.right,
-                  color: grayTextColor,
+                content,
+                textAlign: TextAlign.right,
+                color: grayTextColor,
               )
           ),
         ],
@@ -195,9 +204,9 @@ class MainState extends State<MainWidget> {
 
   void onItemClicked(EosNode node) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DetailWidget(presenter, node.title),
-      )
+        MaterialPageRoute(
+          builder: (context) => DetailWidget(presenter, node.title),
+        )
     );
   }
 }
