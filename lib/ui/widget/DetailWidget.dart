@@ -34,6 +34,9 @@ class DetailState extends State<DetailWidget> {
 
   DetailState(this.mainPresenter, this.title) {
     detailPresenter = DetailPresenter(title);
+
+    node = mainPresenter.nodes.firstWhere((one) => one.title == this.title);
+    number = node.number;
   }
 
   @override
