@@ -209,43 +209,48 @@ class DetailState extends State<DetailWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildActionContent('${action.data['from']} -> ${action.data['to']}'),
-            buildActionContent(action.data['quantity'], topMargin: true),
-            buildActionContent(action.data['memo'], topMargin: true),
+            buildActionContent('${action.data['from']} -> ${action.data['to']}', topMargin: false),
+            buildActionContent(action.data['quantity']),
+            buildActionContent(action.data['memo']),
           ],
         );
       case 'delegatebw':
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildActionContent('${action.data['from']} -> ${action.data['receiver']}'),
-            buildActionContent('Stake CPU ${action.data['stake_cpu_quantity']}', topMargin: true),
-            buildActionContent('Stake NET ${action.data['stake_net_quantity']}', topMargin: true),
-            buildActionContent(action.data['transfer'].toString(), topMargin: true),
+            buildActionContent('${action.data['from']} -> ${action.data['receiver']}', topMargin: false),
+            buildActionContent('Stake CPU ${action.data['stake_cpu_quantity']}'),
+            buildActionContent('Stake NET ${action.data['stake_net_quantity']}'),
+            buildActionContent(action.data['transfer'].toString()),
           ],
         );
       case 'buyrambytes':
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildActionContent('${action.data['payer']} -> ${action.data['receiver']}'),
-            buildActionContent('${action.data['bytes'].toString()} Bytes', topMargin: true),
+            buildActionContent('${action.data['payer']} -> ${action.data['receiver']}', topMargin: false),
+            buildActionContent('${action.data['bytes'].toString()} Bytes'),
           ],
         );
       case 'claimrewards':
-        return buildActionContent(action.data['owner']);
+        return buildActionContent(action.data['owner'], topMargin: false);
       case 'broadcast':
-        return buildActionContent(action.data['message']);
+        return buildActionContent(action.data['message'], topMargin: false);
       default:
-        return buildActionContent(action.getDataString());
+        return buildActionContent(action.getDataString(), topMargin: false);
     }
   }
 
-  Widget buildActionContent(String text, {bool topMargin = false}) {
-    return CommonWidget.getTextContainer(
-      text,
+  Widget buildActionContent(String text, {bool topMargin = true}) {
+    return Container(
       margin: topMargin ? EdgeInsets.only(top: itemInnerMargin) : EdgeInsets.zero,
-      textAlign: TextAlign.left,
+      child: Text(
+          text,
+          textAlign: TextAlign.left,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 15,
+          style: TextStyle(fontSize: 12.0)
+      ),
     );
   }
 }
