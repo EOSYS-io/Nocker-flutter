@@ -6,7 +6,7 @@ import 'package:nocker/util/Constants.dart';
 
 class HttpService {
   Future<Response> getInfo(String url) => post("$url/v1/chain/get_info")
-      .timeout(Duration(seconds: timeoutInterval));
+      .timeout(Duration(milliseconds: timeoutInterval));
 
   Future<Response> getProducers() => post(
       "https://rpc.eosys.io:443/v1/chain/get_producers",
