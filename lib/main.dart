@@ -1,7 +1,10 @@
 import 'package:nocker/ui/widget/MainWidget.dart';
+import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:intl/intl.dart';
 
 void main() => runApp(MyApp());
@@ -9,6 +12,9 @@ void main() => runApp(MyApp());
 final String appTitle = 'Nocker';
 
 class MyApp extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -23,10 +29,11 @@ class MyApp extends StatelessWidget {
         // "hot reload" (press "r" in the console where you ran "flutter run",
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
+        primaryColor: primaryColor,
       ),
       //home: new MyHomePage(title: 'Eos Node Checker'),
-      home: MainWidget(),
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: MainWidget(analytics),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

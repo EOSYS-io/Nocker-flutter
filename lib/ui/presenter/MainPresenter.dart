@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/data/remote/HttpService.dart';
@@ -9,6 +10,8 @@ import 'package:nocker/util/Constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MainPresenter extends WidgetsBindingObserver {
+  final FirebaseAnalytics analytics;
+
   final service = HttpService();
 
   final nodes = <EosNode>[];
@@ -19,6 +22,8 @@ class MainPresenter extends WidgetsBindingObserver {
   Timer refreshTimer;
   bool isResumed = false;
   int nodeIndex = 0;
+
+  MainPresenter(this.analytics);
 
   void init() {
     WidgetsBinding.instance.addObserver(this);
@@ -98,9 +103,15 @@ class MainPresenter extends WidgetsBindingObserver {
           if (node.number > maxHeight) {
             maxHeight = node.number;
           }
+
+          if (0 < node.number && node.number < maxHeight - warningOffset) {
+            _logWarningEvent(node.title, maxHeight - node.number);
+          }
         })
         .catchError((error) {
-          print(error.toString());
+          print('${node.title}. $error');
+          _logExceptionEvent(node.title, node.endpoint, error.runtimeType.toString());
+
           node.setError();
           if (node.endpointsLength == 1) {
             getBPInfo(node);
@@ -179,7 +190,7 @@ class MainPresenter extends WidgetsBindingObserver {
             node.setError();
           }
         }).catchError((error) {
-          print(error);
+          print('${node.title}. $error');
           if (isResumed) {
             List<String> splits = node.url.split('://');
             if (splits[0] == 'http') {
@@ -200,5 +211,26 @@ class MainPresenter extends WidgetsBindingObserver {
       endpoint = endpoint.substring(0, endpoint.length - 1);
     }
     return endpoint;
+  }
+
+  Future _logExceptionEvent(String name, String endpoint, String exception) async {
+    return await analytics.logEvent(
+      name: 'exception',
+      parameters: {
+        'bp_name': name,
+        'endpoint': endpoint,
+        'exception': exception,
+      }
+    );
+  }
+
+  Future _logWarningEvent(String name, int differ) async {
+    return await analytics.logEvent(
+        name: 'warning',
+        parameters: {
+          'bp_name': name,
+          'difference': differ,
+        }
+    );
   }
 }
