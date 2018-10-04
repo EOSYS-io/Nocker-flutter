@@ -26,9 +26,10 @@ class CommonWidget {
 
   static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 12.0, Color color = Colors.black, bool isBold = false}) {
     return Text(
-        text,
-        textAlign: textAlign,
-        style: TextStyle(fontSize: fontSize, color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
+      text,
+      textAlign: textAlign,
+      style: TextStyle(fontSize: fontSize, color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+      textScaleFactor: 1.0,
     );
   }
 

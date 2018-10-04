@@ -187,6 +187,7 @@ class DetailState extends State<DetailWidget> {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: detailItemTitleSize, fontWeight: FontWeight.bold),
+                      textScaleFactor: 1.0,
                     ),
                   ),
                 ),
@@ -248,11 +249,12 @@ class DetailState extends State<DetailWidget> {
     return Container(
       margin: topMargin ? EdgeInsets.only(top: itemInnerMargin) : EdgeInsets.zero,
       child: Text(
-          text,
-          textAlign: TextAlign.left,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 15,
-          style: TextStyle(fontSize: 12.0)
+        text,
+        textAlign: TextAlign.left,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 15,
+        style: TextStyle(fontSize: 12.0),
+        textScaleFactor: 1.0,
       ),
     );
   }
