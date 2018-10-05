@@ -109,7 +109,8 @@ class MainPresenter extends WidgetsBindingObserver {
           }
         })
         .catchError((error) {
-          print('${node.title}. $error');
+          print('${node.title}. ${node.endpoint}');
+          print(error);
           _logExceptionEvent(node.title, node.endpoint, error.runtimeType.toString());
 
           node.setError();
