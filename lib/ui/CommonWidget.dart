@@ -42,11 +42,16 @@ class CommonWidget {
   }
 
   static Widget getImageWidget(String url, {double size = 68.0}) {
+    Widget errorWidget = Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/logo-error.png')),
+      ),
+    );
+    
     if (url == null || url.isEmpty) {
-      return Container(
-        width: size,
-        height: size,
-      );
+      return errorWidget;
     } else if (url.substring(url.length - 3) == 'svg') {
       return Container(
         width: size,
@@ -61,6 +66,7 @@ class CommonWidget {
         height: size,
         imageUrl: url,
         fadeInDuration: Duration.zero,
+        errorWidget: errorWidget,
       );
     }
   }
