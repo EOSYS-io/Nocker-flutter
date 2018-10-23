@@ -114,9 +114,6 @@ class MainPresenter extends WidgetsBindingObserver {
           _logExceptionEvent(node.title, node.endpoint, error.runtimeType.toString());
 
           node.setError();
-          if (node.endpointsLength == 1) {
-            getBPInfo(node);
-          }
         });
   }
 
