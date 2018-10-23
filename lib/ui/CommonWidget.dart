@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CommonWidget {
 
@@ -7,24 +8,28 @@ class CommonWidget {
       String text, {
         double width,
         double height,
+        EdgeInsets margin = EdgeInsets.zero,
         EdgeInsets padding = EdgeInsets.zero,
         TextAlign textAlign = TextAlign.center,
-        double fontSize = 14.0,
+        double fontSize = 12.0,
+        Color textColor = Colors.black,
         bool isBold = false
       }) {
     return Container(
       width: width,
       height: height,
+      margin: margin,
       padding: padding,
-      child: getText(text, textAlign: textAlign, fontSize: fontSize, isBold: isBold),
+      child: getText(text, textAlign: textAlign, fontSize: fontSize, color: textColor, isBold: isBold),
     );
   }
 
-  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 14.0, bool isBold = false}) {
+  static Widget getText(String text, {TextAlign textAlign = TextAlign.center, double fontSize = 12.0, Color color = Colors.black, bool isBold = false}) {
     return Text(
-        text,
-        textAlign: textAlign,
-        style: TextStyle(fontSize: fontSize, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)
+      text,
+      textAlign: textAlign,
+      style: TextStyle(fontSize: fontSize, color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+      textScaleFactor: 1.0,
     );
   }
 
@@ -36,17 +41,32 @@ class CommonWidget {
     );
   }
 
-  static Widget getImageWidget(String url, {double width = 24.0, double height = 24.0}) {
-    if (url != null && url.isNotEmpty) {
-      return CachedNetworkImage(
-        width: width,
-        height: height,
-        imageUrl: url,
+  static Widget getImageWidget(String url, {double size = 68.0}) {
+    Widget errorWidget = Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/logo-error.png')),
+      ),
+    );
+    
+    if (url == null || url.isEmpty) {
+      return errorWidget;
+    } else if (url.substring(url.length - 3) == 'svg') {
+      return Container(
+        width: size,
+        height: size,
+        child: SvgPicture.network(
+          url,
+        ),
       );
     } else {
-      return Container(
-        width: width,
-        height: height,
+      return CachedNetworkImage(
+        width: size,
+        height: size,
+        imageUrl: url,
+        fadeInDuration: Duration.zero,
+        errorWidget: errorWidget,
       );
     }
   }

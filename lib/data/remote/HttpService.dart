@@ -2,23 +2,22 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
-
-final int timeoutInterval = 3;
+import 'package:nocker/util/Constants.dart';
 
 class HttpService {
   Future<Response> getInfo(String url) => post("$url/v1/chain/get_info")
-      .timeout(Duration(seconds: timeoutInterval));
+      .timeout(Duration(milliseconds: timeoutInterval));
 
   Future<Response> getProducers() => post(
       "https://rpc.eosys.io:443/v1/chain/get_producers",
       body: json.encode({
-        "limit": "40",
+        "limit": producerCount,
         "json": "true"
       })
   );
 
   Future<Response> getBPInfo(String url) => get("$url/bp.json")
-      .timeout(Duration(seconds: 10));
+      .timeout(Duration(seconds: bpInfoTimeoutInterval));
 
   Future<Response> getActions(String name, {int lastSeq = 0, int count = 100}) {
     return post(

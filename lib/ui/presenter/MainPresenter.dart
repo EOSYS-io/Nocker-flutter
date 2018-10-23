@@ -2,15 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:eos_node_checker/data/db/ProducerProvider.dart';
-import 'package:eos_node_checker/data/model/EosNode.dart';
-import 'package:eos_node_checker/data/remote/HttpService.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:nocker/data/model/EosNode.dart';
+import 'package:nocker/data/remote/HttpService.dart';
+import 'package:nocker/util/Constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MainPresenter extends WidgetsBindingObserver {
+  final FirebaseAnalytics analytics;
+
   final service = HttpService();
-  final db = ProducerProvider();
 
   final nodes = <EosNode>[];
   int maxHeight = 0;
@@ -18,20 +20,18 @@ class MainPresenter extends WidgetsBindingObserver {
   final subject = BehaviorSubject<List<EosNode>>();
   Timer timer;
   Timer refreshTimer;
-  bool isInit = false;
+  bool isResumed = false;
   int nodeIndex = 0;
 
-  void init() {
-    isInit = true;
-    WidgetsBinding.instance.addObserver(this);
+  MainPresenter(this.analytics);
 
+  void init() {
+    WidgetsBinding.instance.addObserver(this);
     onResume();
   }
 
   void dispose() {
-    isInit = false;
     WidgetsBinding.instance.removeObserver(this);
-
     onPause();
   }
 
@@ -44,13 +44,16 @@ class MainPresenter extends WidgetsBindingObserver {
       case AppLifecycleState.paused:
         onPause();
         break;
+      default:
+        break;
     }
   }
 
-  void onResume() async {
+  void onResume() {
+    isResumed = true;
     cancelTimer();
     
-    timer = Timer.periodic(Duration(milliseconds: 50), (t) {
+    timer = Timer.periodic(Duration(milliseconds: infoTimerDuration), (t) {
       if (nodes.isEmpty) {
         return;
       }
@@ -61,18 +64,17 @@ class MainPresenter extends WidgetsBindingObserver {
       fetchNode(nodes[nodeIndex++]);
     });
 
-    refreshTimer = Timer.periodic(Duration(milliseconds: 500), (t) {
+    refreshTimer = Timer.periodic(Duration(milliseconds: uiTimerDuration), (t) {
       subject.add(nodes);
     });
 
-    await db.open();
     getProducers();
     maxHeight = 0;
   }
 
-  void onPause() async {
+  void onPause() {
+    isResumed = false;
     cancelTimer();
-    await db.close();
   }
 
   void cancelTimer() {
@@ -94,16 +96,23 @@ class MainPresenter extends WidgetsBindingObserver {
     }
 
     service.getInfo(endpoint)
-        .then((response) => response.body)
+        .then((response) => json.decode(response.body))
         .then((body) {
-          node.fromJson(json.decode(body));
+          node.fromJson(body);
 
           if (node.number > maxHeight) {
             maxHeight = node.number;
           }
+
+          if (0 < node.number && node.number < maxHeight - warningOffset) {
+            _logWarningEvent(node.title, maxHeight - node.number);
+          }
         })
         .catchError((error) {
-          print(error.toString());
+          print('${node.title}. ${node.endpoint}');
+          print(error);
+          _logExceptionEvent(node.title, node.endpoint, error.runtimeType.toString());
+
           node.setError();
           if (node.endpointsLength == 1) {
             getBPInfo(node);
@@ -131,19 +140,15 @@ class MainPresenter extends WidgetsBindingObserver {
           nodes.addAll(rows);
           nodes.sort((a, b) => a.rank.compareTo(b.rank));
 
-          nodes.forEach((node) async {
-            node.logoUrl = await db.getLogoUrl(node.title);
-            node.setEndpoints(await db.getEndpoints(node.title));
-            if (node.endpoint == null) {
-              getBPInfo(node);
-            }
+          nodes.forEach((node) {
+            getBPInfo(node);
           });
 
           subject.add(nodes);
         })
         .catchError((error) {
           print(error);
-          if (isInit) {
+          if (isResumed) {
             getProducers();
           }
         });
@@ -154,11 +159,16 @@ class MainPresenter extends WidgetsBindingObserver {
         .then((response) => response.body)
         .then((body) {
           Map obj = json.decode(body);
-          String logoUrl = obj['org']['branding']['logo_256'];
-          if (logoUrl == null || logoUrl.isEmpty) {
-            logoUrl = obj['org']['branding']['logo_1024'];
+          if (obj['org'] != null && obj['org']['branding'] != null) {
+            String logoUrl = obj['org']['branding']['logo_256'];
+            if (logoUrl == null || logoUrl.isEmpty) {
+              logoUrl = obj['org']['branding']['logo_1024'];
+            }
+            if (logoUrl == null || logoUrl.isEmpty) {
+              logoUrl = obj['org']['branding']['logo_svg'];
+            }
+            node.logoUrl = logoUrl;
           }
-          node.logoUrl = logoUrl;
 
           List nodes = obj['nodes'];
           List<String> endpoints = <String>[];
@@ -176,15 +186,13 @@ class MainPresenter extends WidgetsBindingObserver {
 
           if (endpoints.isNotEmpty) {
             node.setEndpoints(endpoints);
-            endpoints.forEach((endpoint) {
-              db.insert(node.title, node.url, endpoint, logoUrl);
-            });
-
             fetchNode(node);
+          } else {
+            node.setError();
           }
         }).catchError((error) {
-          print(error);
-          if (isInit) {
+          print('${node.title}. $error');
+          if (isResumed) {
             List<String> splits = node.url.split('://');
             if (splits[0] == 'http') {
               node.url = 'https://${splits[1]}';
@@ -204,5 +212,26 @@ class MainPresenter extends WidgetsBindingObserver {
       endpoint = endpoint.substring(0, endpoint.length - 1);
     }
     return endpoint;
+  }
+
+  Future _logExceptionEvent(String name, String endpoint, String exception) async {
+    return await analytics.logEvent(
+      name: 'exception',
+      parameters: {
+        'bp_name': name,
+        'endpoint': endpoint,
+        'exception': exception,
+      }
+    );
+  }
+
+  Future _logWarningEvent(String name, int differ) async {
+    return await analytics.logEvent(
+        name: 'warning',
+        parameters: {
+          'bp_name': name,
+          'difference': differ,
+        }
+    );
   }
 }

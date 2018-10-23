@@ -1,5 +1,7 @@
-name: eos_node_checker
-description: Eos node checker for Flutter
+name: nocker
+description: A new Flutter application.
+
+version: 1.0.0+1
 
 dependencies:
   flutter:
@@ -15,7 +17,7 @@ dependencies:
   intl: ^0.15.7
   http: ^0.11.3+16
   rxdart: ^0.18.1
-  sqflite: ^0.11.1
+  flutter_svg: ^0.6.0
   cached_network_image: ^0.4.1
 
 dev_dependencies:
@@ -28,6 +30,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
