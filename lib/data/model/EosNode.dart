@@ -29,7 +29,9 @@ class EosNode {
     double unit = 1000.0;
     int i;
     for (i = 0; i < unitText.length; i++) {
-      if (votes < unit * unit) break;
+      if (votes < unit * unit) {
+        break;
+      }
       votes /= unit;
     }
     if (i == unitText.length) {
@@ -77,7 +79,9 @@ class EosNode {
   }
 
   void setEndpoints(List<String> endpoints) {
-    if (endpoints == null || endpoints.isEmpty) return;
+    if (endpoints == null || endpoints.isEmpty) {
+      return;
+    }
 
     _endpoints.clear();
     _endpoints.addAll(endpoints);

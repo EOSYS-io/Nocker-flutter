@@ -74,15 +74,11 @@ class MainPresenter extends WidgetsBindingObserver {
   }
 
   void cancelTimer() {
-    if (timer != null) {
-      timer.cancel();
-      timer = null;
-    }
+    timer?.cancel();
+    timer = null;
 
-    if (refreshTimer != null) {
-      refreshTimer.cancel();
-      refreshTimer = null;
-    }
+    refreshTimer?.cancel();
+    refreshTimer = null;
   }
 
   void fetchNode(EosNode node) {

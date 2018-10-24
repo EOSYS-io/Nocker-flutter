@@ -63,12 +63,8 @@ class DetailState extends State<DetailWidget> {
 
   @override
   void dispose() {
-    if (subscription != null) {
-      subscription.cancel();
-    }
-    if (actSub != null) {
-      actSub.cancel();
-    }
+    subscription?.cancel();
+    actSub?.cancel();
     super.dispose();
   }
 

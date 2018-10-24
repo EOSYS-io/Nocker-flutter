@@ -17,15 +17,12 @@ class MainState extends State<MainWidget> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
-      appBar: null,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
               expandedHeight: headerHeight,
               backgroundColor: primaryColor,
-              floating: false,
-              pinned: false,
               flexibleSpace: Container(
                 height: statusBarHeight + headerHeight,
                 alignment: Alignment.center,
@@ -101,10 +98,7 @@ class MainListState extends State<MainListWidget> {
 
   Widget buildListTile(EosNode node) {
     String number = node.number > 0 ? node.number.toString() : '';
-    String time = '';
-    if (node != null) {
-      time = node.timeString;
-    }
+    String time = node != null ? node.timeString : '';
 
     Color textColor;
     Widget image;
