@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
       //home: new MyHomePage(title: 'Eos Node Checker'),
       navigatorObservers: <NavigatorObserver>[observer],
-      home: MainWidget(analytics),
+      home: MainWidget(),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

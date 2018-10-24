@@ -1,4 +1,4 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/ui/CommonWidget.dart';
@@ -6,22 +6,13 @@ import 'package:nocker/ui/presenter/MainPresenter.dart';
 import 'package:nocker/ui/widget/DetailWidget.dart';
 import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizations.dart';
-import 'package:flutter/material.dart';
 
 class MainWidget extends StatefulWidget {
-  final FirebaseAnalytics analytics;
-
-  MainWidget(this.analytics);
-
   @override
-  MainState createState() => MainState(analytics);
+  MainState createState() => MainState();
 }
 
 class MainState extends State<MainWidget> {
-  final FirebaseAnalytics analytics;
-
-  MainState(this.analytics);
-
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -58,7 +49,7 @@ class MainState extends State<MainWidget> {
             ),
           ];
         },
-        body: MainListWidget(analytics),
+        body: MainListWidget(),
       ),
     );
   }
@@ -66,23 +57,14 @@ class MainState extends State<MainWidget> {
 
 
 class MainListWidget extends StatefulWidget {
-  final FirebaseAnalytics analytics;
-
-  MainListWidget(this.analytics);
-
   @override
-  State<StatefulWidget> createState() => MainListState(analytics);
+  State<StatefulWidget> createState() => MainListState();
 }
 
 class MainListState extends State<MainListWidget> {
-  final FirebaseAnalytics analytics;
-  MainPresenter presenter;
+  MainPresenter presenter = MainPresenter();
   DefaultLocalizations localizations;
   List<EosNode> nodes = <EosNode>[];
-
-  MainListState(this.analytics) {
-    presenter = MainPresenter(analytics);
-  }
 
   @override
   void initState() {

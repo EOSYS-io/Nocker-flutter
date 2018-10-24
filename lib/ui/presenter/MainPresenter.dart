@@ -2,16 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/data/remote/HttpService.dart';
+import 'package:nocker/main.dart';
 import 'package:nocker/util/Constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MainPresenter extends WidgetsBindingObserver {
-  final FirebaseAnalytics analytics;
-
   final service = HttpService();
 
   final nodes = <EosNode>[];
@@ -22,8 +20,6 @@ class MainPresenter extends WidgetsBindingObserver {
   Timer refreshTimer;
   bool isResumed = false;
   int nodeIndex = 0;
-
-  MainPresenter(this.analytics);
 
   void init() {
     WidgetsBinding.instance.addObserver(this);
@@ -212,7 +208,7 @@ class MainPresenter extends WidgetsBindingObserver {
   }
 
   Future _logExceptionEvent(String name, String endpoint, String exception) async {
-    return await analytics.logEvent(
+    return await MyApp.analytics.logEvent(
       name: 'exception',
       parameters: {
         'bp_name': name,
@@ -223,7 +219,7 @@ class MainPresenter extends WidgetsBindingObserver {
   }
 
   Future _logWarningEvent(String name, int differ) async {
-    return await analytics.logEvent(
+    return await MyApp.analytics.logEvent(
         name: 'warning',
         parameters: {
           'bp_name': name,
