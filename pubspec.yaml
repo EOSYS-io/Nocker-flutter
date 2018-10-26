@@ -1,7 +1,7 @@
 name: nocker
 description: A new Flutter application.
 
-version: 1.0.0+1
+version: 1.0.2
 
 dependencies:
   flutter:
