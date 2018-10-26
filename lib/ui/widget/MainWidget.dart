@@ -68,6 +68,10 @@ class MainListState extends State<MainListWidget> {
     super.initState();
     presenter.init();
     presenter.subject.stream.listen((list) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         nodes = list;
       });

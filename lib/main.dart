@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_crashlytics/flutter_crashlytics.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:nocker/ui/widget/MainWidget.dart';
 import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizationsDelegate.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
-import 'package:intl/intl.dart';
 
 void main() async {
   bool isInDebugMode = false;
@@ -31,7 +31,7 @@ void main() async {
   }, onError: (error, stackTrace) async {
     // Whenever an error occurs, call the `reportCrash` function. This will send
     // Dart errors to our dev console or Crashlytics depending on the environment.
-    await FlutterCrashlytics().reportCrash(error, stackTrace, forceCrash: true);
+    await FlutterCrashlytics().reportCrash(error, stackTrace, forceCrash: false);
   });
 }
 

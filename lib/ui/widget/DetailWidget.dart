@@ -43,6 +43,10 @@ class DetailState extends State<DetailWidget> {
   void initState() {
     super.initState();
     subscription = mainPresenter.subject.stream.listen((list) {
+      if (!mounted) {
+        return;
+      }
+
       EosNode node = list.firstWhere((one) => one.title == this.title);
       if (number != node.number) {
         setState(() {
