@@ -3,10 +3,13 @@ import 'dart:math';
 
 import 'package:nocker/data/model/Action.dart';
 import 'package:nocker/data/remote/HttpService.dart';
+import 'package:nocker/util/RemoteConfigManager.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DetailPresenter {
   final String title;
+
+  final rcManager = RemoteConfigManager();
   final service = HttpService();
   final actions = Map<int, Action>();
 
@@ -14,9 +17,11 @@ class DetailPresenter {
 
   DetailPresenter(this.title);
 
-  void getActions() {
+  void getActions() async {
+    String url = await rcManager.actionEndpoint;
+
     int seq = actions.isNotEmpty ? actions.keys.reduce(min) : 0;
-    service.getActions(title, lastSeq: seq)
+    service.getActions(url, title, lastSeq: seq)
         .then((response) => json.decode(utf8.decode(response.bodyBytes)))
         .then((body) => (body['actions'] as List).map((act) => Action(act)))
         .then((list) {
@@ -24,11 +29,18 @@ class DetailPresenter {
             actions[act.accountSeq] = act;
           });
 
-          List result = actions.values.toList();
-          result.sort((a, b) => b.accountSeq.compareTo(a.accountSeq));
-
-          subject.add(result);
+          subject.add(
+              actions.values.toList()
+                ..sort((a, b) => b.accountSeq.compareTo(a.accountSeq))
+          );
         })
-        .catchError((error) { print(error); });
+        .catchError((error) {
+          print('getActions error: ${error.runtimeType}. $error');
+
+          if (actions.isEmpty) {
+            rcManager.increaseEndpointIndex();
+          }
+          getActions();
+        });
   }
 }

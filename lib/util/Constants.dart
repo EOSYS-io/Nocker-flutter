@@ -2,11 +2,14 @@ import 'dart:ui';
 
 // param
 final int bpInfoTimeoutInterval = 10;
+final int actionTimeoutInterval = 3;
 final int infoTimerDuration = 30;
 final int uiTimerDuration = 500;
 final int producerCount = 50;
 final int timeoutInterval = infoTimerDuration * producerCount;
 final int warningOffset = (timeoutInterval ~/ 500) * 2;
+final String rcActionUrlKey = 'get_action_url_list';
+final String rcActionDefaultUrl = 'https://eos.greymass.com';
 
 // widget
 final double defaultMargin = 16.0;
