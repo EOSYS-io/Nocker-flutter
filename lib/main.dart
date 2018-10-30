@@ -11,7 +11,7 @@ import 'package:nocker/util/Constants.dart';
 import 'package:nocker/util/locale/DefaultLocalizationsDelegate.dart';
 
 void main() async {
-  bool isInDebugMode = true;
+  bool isInDebugMode = false;
 
   FlutterError.onError = (FlutterErrorDetails details) {
     if (isInDebugMode) {
