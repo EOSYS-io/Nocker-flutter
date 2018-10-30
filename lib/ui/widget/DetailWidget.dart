@@ -239,10 +239,19 @@ class DetailState extends State<DetailWidget> {
       case 'claimrewards':
         return buildActionContent(action.data['owner'], topMargin: false);
       case 'broadcast':
-        return buildActionContent(action.data['message'], topMargin: false);
+        if (action.data['message'] != null) {
+          return buildActionContent(action.data['message'], topMargin: false);
+        } else if (action.data['memo'] != null) {
+          return buildActionContent(action.data['memo'], topMargin: false);
+        }
+        return buildActionDefaultContent(action);
       default:
-        return buildActionContent(action.getDataString(), topMargin: false);
+        return buildActionDefaultContent(action);
     }
+  }
+
+  Widget buildActionDefaultContent(Action action) {
+    return buildActionContent(action.getDataString(), topMargin: false);
   }
 
   Widget buildActionContent(String text, {bool topMargin = true}) {
