@@ -22,7 +22,7 @@ class Action {
     Map<String, dynamic> act = actionTrace['act'];
     account = act['account'];
     name = act['name'];
-    data = act['data'];
+    data = act['data'] is String ? {'data': act['data'].toString()} : act['data'];
   }
 
   String getBlockTimeString() => DateFormat('yyyyMMdd HH:mm:ss').format(blockTime.toLocal());
