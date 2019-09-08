@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
-class Action {
+class NodeAction {
   int accountSeq;
   int blockNumber;
   DateTime blockTime;
@@ -11,7 +11,7 @@ class Action {
   String name;
   Map<String, dynamic> data;
 
-  Action(Map<String, dynamic> json) {
+  NodeAction(Map<String, dynamic> json) {
     accountSeq = json['account_action_seq'];
     blockNumber = json['block_num'];
     blockTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(json['block_time'], true);

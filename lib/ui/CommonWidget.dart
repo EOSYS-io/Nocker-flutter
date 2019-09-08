@@ -66,7 +66,7 @@ class CommonWidget {
         height: size,
         imageUrl: url,
         fadeInDuration: Duration.zero,
-        errorWidget: errorWidget,
+        errorWidget: (context, url, error) => errorWidget,
       );
     }
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:nocker/data/model/Action.dart';
+import 'package:nocker/data/model/NodeAction.dart';
 import 'package:nocker/data/model/EosNode.dart';
 import 'package:nocker/ui/CommonWidget.dart';
 import 'package:nocker/ui/presenter/DetailPresenter.dart';
@@ -26,11 +26,11 @@ class DetailState extends State<DetailWidget> {
   DetailPresenter detailPresenter;
   DefaultLocalizations localizations;
   StreamSubscription<List<EosNode>> subscription;
-  StreamSubscription<List<Action>> actSub;
+  StreamSubscription<List<NodeAction>> actSub;
 
   EosNode node;
   int number;
-  List<Action> actions = <Action>[];
+  List<NodeAction> actions = <NodeAction>[];
 
   DetailState(this.mainPresenter, this.title) {
     detailPresenter = DetailPresenter(title);
@@ -154,7 +154,7 @@ class DetailState extends State<DetailWidget> {
     );
   }
 
-  Widget buildListTile(Action action) {
+  Widget buildListTile(NodeAction action) {
     return Card(
       margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin, bottom: itemDefaultMargin),
       color: Colors.white,
@@ -207,7 +207,7 @@ class DetailState extends State<DetailWidget> {
     );
   }
 
-  Widget buildActionData(Action action) {
+  Widget buildActionData(NodeAction action) {
     switch (action.name) {
       case 'transfer':
         return Column(
@@ -250,7 +250,7 @@ class DetailState extends State<DetailWidget> {
     }
   }
 
-  Widget buildActionDefaultContent(Action action) {
+  Widget buildActionDefaultContent(NodeAction action) {
     return buildActionContent(action.getDataString(), topMargin: false);
   }
 
